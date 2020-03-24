@@ -32,6 +32,8 @@ services:
       && python manage.py collectstatic --noinput
       && python manage.py dbseed
       && python manage.py runserver 0.0.0.0:8000
+# Run with uwsgi 'prod' mode
+#      && uwsgi --ini uwsgi.ini
 
 # Persisted or shared between runs
 volumes:

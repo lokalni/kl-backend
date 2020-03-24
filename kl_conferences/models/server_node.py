@@ -10,7 +10,8 @@ class ServerNode(models.Model):
         db_table = 'server_nodes'
 
     @classmethod
-    def assign_server(cls, conference):
+    def assign_server(cls, group):
+        """Choose best server to host lesson for given group."""
         # TODO - assignment logic (prometheus was mentioned)
         return cls.objects.last()
 

@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
        gcc \
        make \
        postgresql \
-       python3-dev
+       python3-dev \
+   && pip install uwsgi
 
 # Instal requirements and add code - use docker cache
 COPY /requirements.txt /code/requirements.txt
