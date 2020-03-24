@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 
 
@@ -8,3 +9,6 @@ class Group(models.Model):
 
     class Meta:
         db_table = 'groups'
+
+
+admin.site.register(Group)

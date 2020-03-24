@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 
 
@@ -8,3 +9,6 @@ class Moderator(models.Model):
 
     class Meta:
         db_table = 'moderators'
+
+
+admin.site.register(Moderator)

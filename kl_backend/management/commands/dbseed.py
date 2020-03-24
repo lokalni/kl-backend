@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
 
 from kl_conferences.models import ServerNode
@@ -13,6 +14,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if ServerNode.objects.exists():
             return
+
+        # Create django admin user
+        User.objects.create_superuser('admin', 'admin@ddd.ddd', 'admin')
 
         s1 = ServerNode.objects.create(display_name='Serwerek 1', url='dupa.dupa.com/123')
         s2 = ServerNode.objects.create(display_name='Serwerek 2', url='dupa.dupa.com/456')

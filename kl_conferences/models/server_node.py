@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 
 
@@ -12,3 +13,6 @@ class ServerNode(models.Model):
     def assign_server(cls, conference):
         # TODO - assignment logic (prometheus was mentioned)
         return cls.objects.last()
+
+
+admin.site.register(ServerNode)

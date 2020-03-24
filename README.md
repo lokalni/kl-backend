@@ -21,3 +21,5 @@ Try these:
 ### Make migrations
 `docker-compose run --rm kl-backend python manage.py makemigrations <app_name like kl_conferences>`
 
+### Django Admin
+Open `http://localhost:8000/admin`, log in with admin/admin credentials.

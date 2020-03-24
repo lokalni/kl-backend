@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 
 
@@ -10,3 +11,5 @@ class Room(models.Model):
     class Meta:
         db_table = 'rooms'
 
+
+admin.site.register(Room)
