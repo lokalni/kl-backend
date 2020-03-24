@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+
+  kl-database:
+    image: postgres:12.2
+    environment:
+      - POSTGRES_DB=main
+      - POSTGRES_USER=db-user
+      - POSTGRES_PASSWORD=db-pass
+    volumes:
+      # keep db data between startups
+      - db_data:/var/lib/postgresql/data
+
+  kl-backend:
+    env_file:
+      - devops/env.local
+    image: kl-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/code:delegated
+      # keep requirements between startups
+      - python_lib:/usr/local/lib/python3.7
+    ports:
+      - 8000:8000
+    depends_on:
+      - kl-database
+    command: >
+      python manage.py migrate
+      && python manage.py collectstatic --noinput
+      && python manage.py dbseed
+      && python manage.py runserver 0.0.0.0:8000
+
+# Persisted or shared between runs
+volumes:
+  db_data:
+  python_lib:
