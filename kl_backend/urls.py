@@ -17,12 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from kl_participants.views import (
-    GroupViewSet,
-)
-from kl_conferences.views import (
-    RoomViewSet,
-)
+from kl_participants.views import *
+from kl_conferences.views import *
 
 router = DefaultRouter()
 router.register(r'groups', GroupViewSet, basename='groups')

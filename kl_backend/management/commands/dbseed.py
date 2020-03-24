@@ -33,13 +33,13 @@ class Command(BaseCommand):
         m3.groups.add(g3)
 
         # Add sample student to class groups
-        Student.objects.create(display_name='Seba', group=g1)
-        Student.objects.create(display_name='Karyna', group=g1)
+        Student.objects.create(display_name='Seba', group=g1, access_token='SEBA')
+        Student.objects.create(display_name='Karyna', group=g1, access_token='KARYNA')
 
-        Student.objects.create(display_name='Brian', group=g2)
-        Student.objects.create(display_name='Nicolette', group=g2)
+        Student.objects.create(display_name='Brian', group=g2, access_token='BRIAN')
+        Student.objects.create(display_name='Nicolette', group=g2, access_token='MAXOSIEM')
 
-        Student.objects.create(display_name='Nadzieja', group=g3)
-        Student.objects.create(display_name='Ahmed', group=g3)
+        Student.objects.create(display_name='Nadzieja', group=g3, access_token='NADZIEJA')
+        Student.objects.create(display_name='Ahmed', group=g3, access_token='AHMED')
 
 
