@@ -18,8 +18,8 @@ class Command(BaseCommand):
         # Create django admin user
         User.objects.create_superuser('admin', 'admin@ddd.ddd', 'admin')
 
-        s1 = ServerNode.objects.create(display_name='Serwerek 1', url='dupa.dupa.com/123')
-        s2 = ServerNode.objects.create(display_name='Serwerek 2', url='dupa.dupa.com/456')
+        s1 = ServerNode.objects.create(display_name='Serwerek 1', hostname='abcdef.com')
+        s2 = ServerNode.objects.create(display_name='Serwerek 2', hostname='ghijkl.com')
 
         # Add class groups
         g1 = Group.objects.create(display_name='klasa 3A szkola 1')
