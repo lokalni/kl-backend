@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: kl-backend-container
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           image: docker.io/lokalni/kl-backend:latest
           command: ["uwsgi", "--ini", "uwsgi.ini"]
           ports:
