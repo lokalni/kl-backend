@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -20,8 +20,8 @@ class ServerNodeSelfServiceViewSet(mixins.CreateModelMixin, viewsets.GenericView
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        ServerNode.register_server_node(**serializer.data)
-        return Response()
+        node = ServerNode.register_server_node(**serializer.data)
+        return Response(status=status.HTTP_200_OK if node is not None else status.HTTP_304_NOT_MODIFIED)
 
     @action(detail=False, methods=['post'])
     def keepalive(self, request):

@@ -32,7 +32,7 @@ class Region:
                 (cls.POMORSKIE, cls.POMORSKIE),
                 (cls.SLASKIE, cls.SLASKIE),
                 (cls.SWIETOKRZYSKIE, cls.SWIETOKRZYSKIE),
-                (cls.WARMINSKO-MAZURSKIE, cls.WARMINSKO-MAZURSKIE),
+                (cls.WARMINSKO_MAZURSKIE, cls.WARMINSKO_MAZURSKIE),
                 (cls.WIELKOPOLSKIE, cls.WIELKOPOLSKIE),
                 (cls.ZACHODNIOPOMORSKIE, cls.ZACHODNIOPOMORSKIE),
         ]

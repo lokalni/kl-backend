@@ -35,14 +35,14 @@ class ServerNode(models.Model):
         server.save()
 
     @classmethod
-    def register_server_node(cls, hostname, api_secret):
+    def register_server_node(cls, hostname, api_secret, display_name=None):
         api = BigBlueButtonAPI(hostname, api_secret)
-        api.check_connection()
-
-        return ServerNode.objects.create(
-            hotname=hostname,
-            api_secret=api_secret,
-        )
+        if api.check_connection():
+            return ServerNode.objects.create(
+                display_name=display_name or hostname,
+                hostname=hostname,
+                api_secret=api_secret,
+            )
 
 
 admin.site.register(ServerNode)

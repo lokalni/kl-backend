@@ -1,5 +1,8 @@
 ON_BACKEND_RUN=docker-compose run --rm kl-backend
 
+dev:
+	export KUBECONFIG=devops/okta-kube-config
+
 reset_db:
 	${ON_BACKEND_RUN} bash -c 'echo "DROP SCHEMA public cascade; CREATE SCHEMA public" | python manage.py dbshell'
 	${ON_BACKEND_RUN} python manage.py migrate

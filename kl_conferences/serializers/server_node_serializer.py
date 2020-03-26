@@ -18,9 +18,10 @@ class HostnameField(serializers.CharField):
     max_length = 128
 
     def to_internal_value(self, data):
-        if not re.match(r'\w)$', data):
-            msg = 'Incorrect type. Expected a string, but got %s'
-            raise ValidationError(msg % type(data).__name__)
+        data = str(data)
+        if not re.match(r'^([\w\d]+\.)+\w+(:\d+)?$', data):
+            raise ValidationError('Incorrect hostname format!')
+        return data
 
 
 class ServerNodeRegisterRequestSerializer(serializers.Serializer):
