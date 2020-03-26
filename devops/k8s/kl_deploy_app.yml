@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kl-backend
+  labels:
+    app: kl-backend
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: kl-backend
+  template:
+    metadata:
+      labels:
+        app: kl-backend
+    spec:
+      containers:
+        - name: kl-backend-container
+          imagePullPolicy: IfNotPresent
+          image: docker.io/lokalni/kl-backend:latest
+          command: ["uwsgi", "--ini", "uwsgi.ini"]
+          ports:
+          - containerPort: 8000
+          env:
+            - name: DJ_DATABASES_DEFAULT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: kl-backend-secrets
+                  key: database_url
+
+            - name: DJ_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: kl-backend-secrets
+                  key: django_secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    k44sServiceType: HTTP
+  labels:
+    run: kl-backend
+  name: kl-backend-loadbalancer
+spec:
+  ports:
+  - port: 80
+    name: http
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: kl-backend
+  type: LoadBalancer
