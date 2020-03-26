@@ -28,12 +28,13 @@ spec:
                 secretKeyRef:
                   name: kl-backend-secrets
                   key: database_url
-
             - name: DJ_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: kl-backend-secrets
                   key: django_secret
+            - name: DJ_ALLOWED_HOSTS
+              value: "app.teleklasa.lokalni.pl"
 ---
 apiVersion: v1
 kind: Service
