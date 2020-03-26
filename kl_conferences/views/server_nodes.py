@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -9,16 +9,15 @@ from kl_conferences.serializers.server_node_serializer import (
 )
 
 
-class ServerNodeSelfServiceViewSet(viewsets.GenericViewSet):
+class ServerNodeSelfServiceViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
     def get_serializer_class(self):
-        if self.action == 'register':
+        if self.action == 'create':
             return ServerNodeRegisterRequestSerializer
-        elif self.action == 'heartbeat':
+        elif self.action == 'keepalive':
             return ServerNodeHeartBeatRequestSerializer
 
-    @action(detail=False, methods=['post'])
-    def register(self, request):
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         ServerNode.register_server_node(**serializer.data)
