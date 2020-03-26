@@ -9,3 +9,6 @@ reset_db:
 clean_env:
 	docker-compose down --volumes --rmi all --remove-orphans
 
+docker_to_prod:
+	kubectl config set-context --current --namespace=kl-prod
+	kubectl apply -f devops/k8s/kl_deploy_app.yml
