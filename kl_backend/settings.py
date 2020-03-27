@@ -108,6 +108,21 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -126,4 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'static'
+STATIC_ROOT = 'staticfiles'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
