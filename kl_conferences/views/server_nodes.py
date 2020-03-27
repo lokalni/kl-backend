@@ -10,12 +10,7 @@ from kl_conferences.serializers.server_node_serializer import (
 
 
 class ServerNodeSelfServiceViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return ServerNodeRegisterRequestSerializer
-        elif self.action == 'keepalive':
-            return ServerNodeHeartBeatRequestSerializer
+    serializer_class = ServerNodeRegisterRequestSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -23,7 +18,7 @@ class ServerNodeSelfServiceViewSet(mixins.CreateModelMixin, viewsets.GenericView
         node = ServerNode.register_server_node(**serializer.data)
         return Response(status=status.HTTP_200_OK if node is not None else status.HTTP_304_NOT_MODIFIED)
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], serializer_class=ServerNodeHeartBeatRequestSerializer)
     def keepalive(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django.utils.timezone import now
+from django.conf import settings
 
 from kl_backend.regions import Region
 from kl_conferences.bbb_api import BigBlueButtonAPI
@@ -36,13 +37,18 @@ class ServerNode(models.Model):
 
     @classmethod
     def register_server_node(cls, hostname, api_secret, display_name=None):
+        # Verify hostname from allowed domain
+        if not hostname.endswith(settings.BBB_DOMAIN_ALLOWED):
+            return
+
         api = BigBlueButtonAPI(hostname, api_secret)
         if api.check_connection():
-            return ServerNode.objects.create(
+            server_node, _ = ServerNode.objects.update_or_create(
                 display_name=display_name or hostname,
                 hostname=hostname,
-                api_secret=api_secret,
+                defaults={'api_secret': api_secret},
             )
+            return server_node
 
 
 admin.site.register(ServerNode)
