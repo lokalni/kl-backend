@@ -13,10 +13,10 @@ RUN apt-get update && apt-get install -y \
 COPY /requirements.txt /code/requirements.txt
 RUN pip install -r /code/requirements.txt
 
-ENV DJANGO_SETTINGS_MODULE=kl_backend.settings
-
 COPY . code
 WORKDIR code
+
+RUN DJ_SECRET_KEY=build_time DJ_DATABASES_DEFAULT_URL=postgresql://localhost/dummy DJ_ALLOWED_HOSTS=localhost python manage.py collectstatic --noinput
 
 # Declare late to use as much cache as possible
 ARG BUILD_COMMIT_SHA
