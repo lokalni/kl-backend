@@ -14,3 +14,6 @@ clean_env:
 makemigrations:
 	${ON_BACKEND_RUN} python manage.py makemigrations
 
+docker_to_prod:
+	kubectl config set-context --current --namespace=kl-prod
+	kubectl apply -f devops/k8s/kl_deploy_app.yml
