@@ -23,6 +23,7 @@ from kl_conferences.views import *
 router = DefaultRouter()
 router.register(r'groups', GroupViewSet, basename='groups')
 router.register(r'rooms', RoomViewSet, basename='rooms')
+router.register(r'nodes', ServerNodeSelfServiceViewSet, basename='nodes')
 urlpatterns = router.urls
 
 
