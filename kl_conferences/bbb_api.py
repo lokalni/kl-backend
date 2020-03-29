@@ -53,7 +53,8 @@ class BigBlueButtonAPI:
         self.hostname = hostname
         self.api_secret = api_secret
 
-    def _get(self, method, **qs_params):
+
+    def _build_url(self, method, **qs_params):
         base_url = API_URL_TEMPLATE.format(
             hostname=self.hostname,
             method=method,
@@ -61,7 +62,10 @@ class BigBlueButtonAPI:
         qs = urlencode(OrderedDict(**qs_params)) if qs_params else ''
         checksum = self._calc_checksum(method, qs)
         qs = qs + '&' if qs else ''
-        full_url = f'{base_url}?{qs}checksum={checksum}'
+        return f'{base_url}?{qs}checksum={checksum}'
+
+    def _get(self, method, **qs_params):
+        full_url = self._build_url(method, **qs_params)
 
         logger.info(f'Calling BBB API GET {full_url}')
         resp = requests.get(full_url, timeout=15)
@@ -109,7 +113,7 @@ class BigBlueButtonAPI:
         return True
 
     def create_room(self, meeting_id: str, attendee_secret: str, moderator_secret: str, welcome_msg: str,
-                    max_participants: int = 50, guestPolicy: str = 'ASK_MODERATOR', webcam_mod_only: bool = True):
+                    max_participants: int = 50, guestPolicy: str = 'ALWAYS_ACCEPT', webcam_mod_only: bool = True):
         """
         Creates room in BBB server
         https://docs.bigbluebutton.org/dev/api.html#create
@@ -166,21 +170,21 @@ class BigBlueButtonAPI:
 
         return BBBRoom(**{child.tag: child.text for child in xml_resp})
 
-    def join(self, meeting_id: str, password: str, join_as: str, assing_user_id: str,
+    def get_join_url(self, meeting_id: str, password: str, join_as: str, assing_user_id: str,
              join_via_html5: bool = False, user_is_guest: bool = False):
         """
-        Sends join request, returns url for redirecting user to.
-        https://docs.bigbluebutton.org/dev/api.html#join
+        Builds url allowing user to join the meeting.
+        When user is redirected to that url he'll automatically join the room.
 
-        :returns url to access the room
+        https://docs.bigbluebutton.org/dev/api.html#join
+        :returns url for redirect
         """
-        xml_resp = self._get('join', **{
+        return self._build_url('join', **{
             'meetingID': meeting_id,
             'password': password,
             'fullName': join_as,
             'userID': assing_user_id,
             'joinViaHtml5': apibool(join_via_html5),
             'guest': apibool(user_is_guest),
-            'redirect': apibool(False),  # TODO - not sure here
+            'redirect': apibool(True),
         })
-        return xml_resp.find('url').text

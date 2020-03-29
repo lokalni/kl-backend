@@ -26,7 +26,7 @@ def start_lesson(group, moderator):
     except RoomAlreadyExistsError:
         pass
 
-    redirect_url = api.join(
+    redirect_url = api.get_join_url(
         meeting_id=room.bbb_meeting_id,
         password=room.moderator_secret,
         join_as=moderator.display_name,

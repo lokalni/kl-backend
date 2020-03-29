@@ -28,7 +28,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 
         try:
             # TODO - where do I take pass from?
-            redirect_url = bbb_api.join(
+            redirect_url = bbb_api.get_join_url(
                 meeting_id=lesson.bbb_meeting_id,
                 password=lesson.attendee_secret,
                 join_as=student.display_name,
