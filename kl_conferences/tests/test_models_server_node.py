@@ -16,7 +16,6 @@ class TestServerNodeTest(TestCase):
     def _make_server(self, **kwargs):
         fields = dict(region=self.region, cpu_count=2, load_5m=0.1)
         fields.update(kwargs)
-        print("Field now: ", fields)
         return mommy.make('kl_conferences.ServerNode', **fields)
 
     def test_server_assignment_no_servers(self):

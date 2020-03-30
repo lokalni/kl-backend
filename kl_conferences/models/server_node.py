@@ -42,7 +42,6 @@ class ServerNode(models.Model):
             region=group.region,
             load_per_cpu__lt=cls.MAX_SAME_REGION_LOAD_PER_CPU
         )
-        # print([same_region_low_load[0].load_per_cpu, same_region_low_load[0].load_5m, same_region_low_load[0].cpu_count])
         if same_region_low_load.exists():
             node_candidates = same_region_low_load
 
@@ -54,7 +53,7 @@ class ServerNode(models.Model):
             cpu_w = 1 - la_w
             return la_v * la_w - cpu_v * cpu_w
 
-        node_candidates = sorted(node_candidates, key=node_weight)
+        node_candidates = sorted(node_candidates, key=node_weight, reverse=True)
         try:
             server = node_candidates[0]
         except IndexError:
@@ -71,10 +70,11 @@ class ServerNode(models.Model):
     @classmethod
     def record_heartbeat(cls, hostname, api_secret, **update_kwargs):
         server = ServerNode.objects.get(hostname=hostname, api_secret=api_secret)
-        server.last_heartbeat = now(),
+        server.last_heartbeat = now()
         for k, v in update_kwargs.items():
             setattr(server, k, v)
         server.save()
+        return server
 
     @classmethod
     def register_server_node(cls, hostname, api_secret, display_name=None):
@@ -84,11 +84,14 @@ class ServerNode(models.Model):
 
         api = BigBlueButtonAPI(hostname, api_secret)
         if api.check_connection():
-            server_node, _ = ServerNode.objects.update_or_create(
-                display_name=display_name or hostname,
-                hostname=hostname,
-                defaults={'api_secret': api_secret},
-            )
+            try:
+                server_node = ServerNode.objects.get(hostname=hostname)
+            except ServerNode.DoesNotExist:
+                server_node = ServerNode(hostname=hostname, display_name=display_name or hostname)
+
+            server_node.api_secret = api_secret
+            server_node.save()
+
             return server_node
 
 
