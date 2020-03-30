@@ -61,6 +61,10 @@ class ServerNode(models.Model):
             logger.error(f'No server available for {group.id} {group.display_name}!')
             return None
 
+        # Get it further from load balancer
+        server.last_assigned = now()
+        server.save()
+
         logger.info(f'Group {group.id} {group.display_name} assigned server {server.hostname}')
         return server
 
