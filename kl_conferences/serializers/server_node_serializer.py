@@ -25,7 +25,7 @@ class HostnameField(serializers.CharField):
 
 
 class ServerNodeRegisterRequestSerializer(serializers.Serializer):
-    hostname = HostnameField() # "http://bbb1.agooddomain.pl/",
+    hostname = HostnameField()
     api_secret = serializers.CharField(max_length=64)  # here_goes_bbb_api_secret
 
 
@@ -33,5 +33,5 @@ class ServerNodeHeartBeatRequestSerializer(serializers.Serializer):
     cpu_count = serializers.IntegerField(min_value=0, max_value=32)
     load_5m = serializers.DecimalField(min_value=0, decimal_places=2, max_digits=6)
     api_secret = serializers.CharField(max_length=64)  # here_goes_bbb_api_secret
-    hostname = HostnameField()  # "http://bbb1.agooddomain.pl/",
-    region_name = serializers.ChoiceField(choices=Region.choices())
+    hostname = HostnameField()
+    region = serializers.ChoiceField(choices=Region.choices())

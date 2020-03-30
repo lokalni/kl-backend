@@ -22,5 +22,9 @@ class ServerNodeSelfServiceViewSet(mixins.CreateModelMixin, viewsets.GenericView
     def keepalive(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        ServerNode.record_heartbeat(**serializer.data)
+        try:
+            ServerNode.record_heartbeat(**serializer.data)
+        except ServerNode.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         return Response()
