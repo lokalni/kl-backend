@@ -16,7 +16,6 @@ def start_lesson(group, moderator):
     try:
         bbb_room = api.create_room(
             meeting_id=room.bbb_meeting_id,
-            welcome_msg='Witojcie',
             attendee_secret=User.objects.make_random_password(),
             moderator_secret=User.objects.make_random_password(),
         )
