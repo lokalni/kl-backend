@@ -35,6 +35,8 @@ spec:
                   key: django_secret
             - name: DJ_ALLOWED_HOSTS
               value: "app-teleklasa.lokalni.pl"
+            - name: DJ_BBB_DOMAIN_ALLOWED
+              value: "bbb.lokalni.pl"
 ---
 apiVersion: v1
 kind: Service
