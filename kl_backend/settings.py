@@ -145,3 +145,6 @@ STATIC_ROOT = 'staticfiles'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+
+BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='bbb.teleklasa.lokalni.pl')

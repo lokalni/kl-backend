@@ -21,16 +21,16 @@ class RoomViewSet(viewsets.ModelViewSet):
         student = get_object_or_404(Student, access_token=token)
         lesson = get_object_or_404(Room, group=student.group)
         bbb_api = BigBlueButtonAPI(lesson.server_node.hostname, lesson.server_node.api_secret)
-        if not bbb_api.is_meeting_running(str(lesson.id)):
+        if not bbb_api.is_meeting_running(lesson.bbb_meeting_id):
             # TODO - soft delete?
             lesson.delete()
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         try:
             # TODO - where do I take pass from?
-            redirect_url = bbb_api.join(
-                meeting_id=str(lesson.id),
-                password='',
+            redirect_url = bbb_api.get_join_url(
+                meeting_id=lesson.bbb_meeting_id,
+                password=lesson.attendee_secret,
                 join_as=student.display_name,
                 assing_user_id=student.uuid,
             )

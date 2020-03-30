@@ -10,5 +10,9 @@ class Moderator(models.Model):
     class Meta:
         db_table = 'moderators'
 
+    @property
+    def uuid(self):
+        return f'moderator:{self.id}'
+
 
 admin.site.register(Moderator)
