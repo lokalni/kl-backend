@@ -11,6 +11,9 @@ reset_db:
 clean_env:
 	docker-compose down --volumes --rmi all --remove-orphans
 
+test:
+	docker-compose run --rm kl-backend python manage.py test
+
 makemigrations:
 	${ON_BACKEND_RUN} python manage.py makemigrations
 

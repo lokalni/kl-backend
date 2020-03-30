@@ -147,4 +147,4 @@ STATICFILES_DIRS = (
 )
 
 
-BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='bbb.teleklasa.lokalni.pl')
+BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')
