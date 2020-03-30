@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -32,6 +33,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
         return HttpResponseRedirect(redirect_to=redirect_url)
 
+    @transaction.atomic
     @action(detail=False, methods=["post"], serializer_class=CreateGroupFullRequestSerializer)
     def create_group_full(self, request):
         serializer = self.get_serializer(data=request.data)

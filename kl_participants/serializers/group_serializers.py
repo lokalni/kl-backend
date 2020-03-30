@@ -25,7 +25,6 @@ class CreateGroupFullRequestSerializer(serializers.ModelSerializer):
     display_name = serializers.CharField(min_length=2, max_length=64, write_only=True)
     delimited_participants = DelimitedStringsListField(write_only=True)
 
-    @transaction.atomic
     def create(self, validated_data):
         participants = validated_data.pop('delimited_participants')
 
