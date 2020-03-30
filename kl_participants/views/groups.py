@@ -2,11 +2,12 @@ from django.http import HttpResponseRedirect
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
+from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
 from kl_conferences.lesson_bridging_service import start_lesson
 from kl_participants.models import Group, Moderator
-from kl_participants.serializers.group_serializers import GroupSerializer
+from kl_participants.serializers.group_serializers import GroupSerializer, CreateGroupFullRequestSerializer
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -30,3 +31,11 @@ class GroupViewSet(viewsets.ModelViewSet):
             raise APIException(str(e))
 
         return HttpResponseRedirect(redirect_to=redirect_url)
+
+    @action(detail=False, methods=["post"], serializer_class=CreateGroupFullRequestSerializer)
+    def create_group_full(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(GroupSerializer(instance=serializer.instance).data, status=status.HTTP_201_CREATED, headers=headers)

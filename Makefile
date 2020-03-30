@@ -20,3 +20,6 @@ makemigrations:
 docker_to_prod:
 	kubectl config set-context --current --namespace=kl-prod
 	kubectl apply -f devops/k8s/kl_deploy_app.yml
+
+pip_install:
+	docker-compose run --no-deps --rm kl-backend pip install -r requirements.txt
