@@ -21,6 +21,7 @@ from kl_participants.views import *
 from kl_conferences.views import *
 
 router = DefaultRouter()
+router.register(r'students', StudentViewSet, basename='students')
 router.register(r'groups', GroupViewSet, basename='groups')
 router.register(r'rooms', RoomViewSet, basename='rooms')
 router.register(r'nodes', ServerNodeSelfServiceViewSet, basename='nodes')

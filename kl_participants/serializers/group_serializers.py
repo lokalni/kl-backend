@@ -16,6 +16,8 @@ class DelimitedStringsListField(serializers.CharField):
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    students_count = serializers.IntegerField(source='student_set.count')
+
     class Meta:
         model = Group
         fields = '__all__'

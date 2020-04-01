@@ -32,6 +32,23 @@ services:
       && python manage.py collectstatic --noinput
       && python manage.py dbseed
       && python manage.py runserver 0.0.0.0:8000
+
+  kl-webapp:
+    image: kl-webapp
+    environment:
+      - BACKEND_URL=http://localhost:8000
+    build:
+      context: webapp
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./webapp:/code:delegated
+      - node_modules:/code/node_modules
+    depends_on:
+      - kl-backend
+    command: >
+      yarn serve
 # Run with uwsgi 'prod' mode
 #      && uwsgi --ini uwsgi.ini
 
@@ -39,3 +56,4 @@ services:
 volumes:
   db_data:
   python_lib:
+  node_modules:

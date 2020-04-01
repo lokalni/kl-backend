@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 
 import string
 import shortuuid
@@ -8,7 +8,7 @@ class Student(models.Model):
     """Students participate in conference rooms created by teachers."""
     group = models.ForeignKey('kl_participants.Group', on_delete=models.PROTECT)
     display_name = models.CharField(max_length=255)
-    access_token = models.CharField(max_length=8) # TODO - add unique or use django token addon
+    access_token = models.CharField(max_length=8, unique=True) # TODO - add unique or use django token addon
 
     TOKEN_LENGTH = 6
     TOKEN_ALPHABET = '123456789' + string.ascii_uppercase[:36].replace('O', '')
@@ -21,10 +21,21 @@ class Student(models.Model):
         # TODO Save uuid in table, use py module short uuid propose by @consi
         return f'student:{self.id}'
 
+    @property
+    def access_url(self):
+        # TODO - use settings var for domain
+        return f'tk.lokalni.pl/{self.access_token}'
+
     @classmethod
+    @transaction.atomic
     def create_new(cls, group, display_name):
-        return Student.objects.create(
+        student = Student(
             group=group,
             display_name=display_name,
-            access_token=shortuuid.ShortUUID(alphabet=cls.TOKEN_ALPHABET).random(length=cls.TOKEN_LENGTH),
         )
+        student.reset_token()
+        student.save()
+        return student
+
+    def reset_token(self):
+        self.access_token = shortuuid.ShortUUID(alphabet=self.TOKEN_ALPHABET).random(length=self.TOKEN_LENGTH),
