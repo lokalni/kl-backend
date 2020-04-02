@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Informacje</router-link> |
-      <router-link to="/groups">Grupy</router-link>
-    </div>
     <router-view/>
   </div>
 </template>

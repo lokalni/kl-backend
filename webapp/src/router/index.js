@@ -9,9 +9,11 @@ export const ROUTE_NAMES = {
   MAIN: 'main',
   TEACHER_GROUPS: 'teacher-groups',
   TEACHER_GROUP_DETAIL: 'teacher-group-details',
+  LIMBO: 'student-limbo',
 };
 
 const routes = [
+  // Teacher namespace
   {
     path: '/',
     name: ROUTE_NAMES.MAIN,
@@ -27,6 +29,13 @@ const routes = [
     path: '/groups/:id',
     name: ROUTE_NAMES.TEACHER_GROUP_DETAIL,
     component: () => import('../views/teacher/TeacherGroupDetail.vue'),
+  },
+
+  // Student namespace
+  {
+    path: '/limbo',
+    name: ROUTE_NAMES.LIMBO,
+    component: () => import('../views/student/Limbo.vue'),
   }
 ];
 

@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.conf import settings
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -10,6 +11,10 @@ from kl_conferences.serializers.room_serializer import RoomSerializer
 from kl_participants.models import Student
 
 
+def limbo_url(token):
+    return f'{settings.LOGIN_REDIRECT}/#/limbo/?token={token}'
+
+
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all().order_by('-id')
     serializer_class = RoomSerializer
@@ -18,13 +23,17 @@ class RoomViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='join/(?P<token>[^/]+)/?')
     def join(self, request, token):
-        student = get_object_or_404(Student, access_token=token.upper())
-        lesson = get_object_or_404(Room, group=student.group)
+        token = token.upper()
+        student = get_object_or_404(Student, access_token=token)
+        lesson = Room.objects.filter(group=student.group).last()
+        if not lesson:
+            return HttpResponseRedirect(redirect_to=limbo_url(token))
+
         bbb_api = BigBlueButtonAPI(lesson.server_node.hostname, lesson.server_node.api_secret)
         if not bbb_api.is_meeting_running(lesson.bbb_meeting_id):
             # TODO - soft delete?
             lesson.delete()
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return HttpResponseRedirect(redirect_to=limbo_url(token))
 
         try:
             # TODO - where do I take pass from?
@@ -36,6 +45,6 @@ class RoomViewSet(viewsets.ModelViewSet):
             )
         except:
             # TODO - too broad
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return HttpResponseRedirect(redirect_to=limbo_url(token))
 
         return HttpResponseRedirect(redirect_to=redirect_url)

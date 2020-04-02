@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <TeacherNavbar/>
     <div class="row">
       <div class="col-md-12 my-3">
         <h2>Twoje Grupy</h2>
@@ -17,11 +18,13 @@
   import {Groups} from '@/api';
   import GroupList from '@/components/GroupList.vue';
   import {ROUTE_NAMES} from "../../router";
+  import TeacherNavbar from '@/components/TeacherNavbar.vue';
 
   export default {
     name: 'app',
     components: {
       GroupList,
+      TeacherNavbar,
     },
     data() {
       // TODO - move to vuex, maybe at API call level

@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <TeacherNavbar/>
     <div class="row">
       <div class="col-md-12 my-3">
         <h2>Studenci grupa</h2>
@@ -19,10 +20,12 @@
 <script>
   import {Students} from '@/api';
   import StudentList from '@/components/StudentList.vue';
+  import TeacherNavbar from '@/components/TeacherNavbar.vue';
 
   export default {
     name: 'app',
     components: {
+      TeacherNavbar,
       StudentList,
     },
     data() {

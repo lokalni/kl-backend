@@ -69,6 +69,10 @@ class StudentResource extends Resource {
     resetAccess({id}) {
         return this._handler(axios.post(`${BACKEND_URL}/${this.path}/${id}/reset_access/`));
     }
+
+    buildJoinUrl(token) {
+        return `${BACKEND_URL}/rooms/join/${token}`;
+    }
 }
 
 

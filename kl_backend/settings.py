@@ -161,4 +161,4 @@ REST_FRAMEWORK = {
 BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')
 
 
-DJ_LOGIN_REDIRECT = env.str('DJ_LOGIN_REDIRECT', default='/')
+LOGIN_REDIRECT = env.str('DJ_LOGIN_REDIRECT', default='/')
