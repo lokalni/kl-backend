@@ -58,7 +58,7 @@ class ServerNode(models.Model):
             server = node_candidates[0]
         except IndexError:
             logger.error(f'No server available for {group.id} {group.display_name}!')
-            return None
+            raise ServerNode.DoesNotExist
 
         # Get it further from load balancer
         server.last_assigned = now()

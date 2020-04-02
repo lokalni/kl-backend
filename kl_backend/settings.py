@@ -154,3 +154,6 @@ STATICFILES_DIRS = (
 
 
 BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')
+
+
+DJ_LOGIN_REDIRECT = env.str('DJ_LOGIN_REDIRECT', default='/')

@@ -30,5 +30,6 @@ urlpatterns = router.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(r'l/<str:token>', quick_login)
 ] + router.urls
 

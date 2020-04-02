@@ -18,7 +18,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='join/(?P<token>[^/]+)/?')
     def join(self, request, token):
-        student = get_object_or_404(Student, access_token=token)
+        student = get_object_or_404(Student, access_token=token.upper())
         lesson = get_object_or_404(Room, group=student.group)
         bbb_api = BigBlueButtonAPI(lesson.server_node.hostname, lesson.server_node.api_secret)
         if not bbb_api.is_meeting_running(lesson.bbb_meeting_id):

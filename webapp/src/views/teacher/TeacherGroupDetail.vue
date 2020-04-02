@@ -7,7 +7,10 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <StudentList :students="students"/>
+        <StudentList
+            :students="students"
+            @updatedStudent="onUpdatedStudent"
+        />
       </div>
     </div>
   </div>
@@ -31,10 +34,21 @@
     computed: {
     },
     async mounted() {
-      this.students = await Students.list({group_id: this.$route.params.id});
-      window.console.log("Students", this.groups);
+      await this.loadStudents();
     },
     methods: {
+      async loadStudents() {
+        this.students = await Students.list({group_id: this.$route.params.id});
+        window.console.log("Students Fetched", this.groups);
+      },
+
+      async onUpdatedStudent() {
+        await this.loadStudents();
+        this.$toasted.show('Suckes!', {
+          duration: 3000,
+          type: 'success',
+        });
+      }
     }
   };
 </script>

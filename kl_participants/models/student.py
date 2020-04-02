@@ -1,17 +1,13 @@
 from django.db import models, transaction
 
-import string
-import shortuuid
+from kl_backend.utils import get_token
 
 
 class Student(models.Model):
     """Students participate in conference rooms created by teachers."""
     group = models.ForeignKey('kl_participants.Group', on_delete=models.PROTECT)
     display_name = models.CharField(max_length=255)
-    access_token = models.CharField(max_length=8, unique=True) # TODO - add unique or use django token addon
-
-    TOKEN_LENGTH = 6
-    TOKEN_ALPHABET = '123456789' + string.ascii_uppercase[:36].replace('O', '')
+    access_token = models.CharField(max_length=8, unique=True, default=get_token)
 
     class Meta:
         db_table = 'students'
@@ -38,4 +34,4 @@ class Student(models.Model):
         return student
 
     def reset_token(self):
-        self.access_token = shortuuid.ShortUUID(alphabet=self.TOKEN_ALPHABET).random(length=self.TOKEN_LENGTH),
+        self.access_token = get_token();

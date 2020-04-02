@@ -13,12 +13,11 @@ class StudentViewSet(viewsets.ModelViewSet):
     permission_classes = []  # TODO
 
     @action(detail=True, methods=["post"], serializer_class=Serializer)
-    def reset_access(self, request):
+    def reset_access(self, request, pk):
         """Create and join as moderator."""
-        # check r
         student = self.get_object()
         student.reset_token()
         student.save()
-
-        return Response(data=self.serializer_class(instance=student).data)
+        student.refresh_from_db()
+        return Response(data=StudentSerializer(instance=student).data)
 

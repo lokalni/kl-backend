@@ -2,11 +2,12 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, ParseError
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
 from kl_conferences.lesson_bridging_service import start_lesson
+from kl_conferences.models import ServerNode
 from kl_participants.models import Group, Moderator
 from kl_participants.serializers.group_serializers import GroupSerializer, CreateGroupFullRequestSerializer
 
@@ -27,9 +28,9 @@ class GroupViewSet(viewsets.ModelViewSet):
 
         try:
             redirect_url = start_lesson(group, moderator)
-        except Exception as e:
+        except ServerNode.DoesNotExist as e:
             # TODO - something smarter?
-            raise APIException(str(e))
+            raise ParseError('Brak dostępnego serwera.')
 
         return HttpResponseRedirect(redirect_to=redirect_url)
 

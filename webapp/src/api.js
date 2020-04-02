@@ -1,5 +1,7 @@
 import axios from 'axios';
+import Vue from 'vue'
 
+const TOAST_DURATION = 6000;
 const BACKEND_URL = process.env.BACKEND_URL;
 
 
@@ -10,8 +12,28 @@ class Resource {
 
     async _handler(promise) {
         // Add generic 404, 500, 400 errors handling
-        const resp = await promise;
-        return resp.data;
+        try {
+            const resp = await promise;
+            return resp.data;
+        } catch (e) {
+            window.console.log(e);
+            const detail = (e.response.data || {}).detail || '';
+            const respCode = e.response.status;
+
+            if (respCode === 400) {
+                Vue.toasted.show(`Wystąpił błąd! ${detail}`, {
+                    duration: TOAST_DURATION,
+                    type: 'error',
+                });
+            } else if (respCode === 500) {
+                Vue.toasted.show(`Nieznany błąd!`, {
+                    duration: TOAST_DURATION,
+                    type: 'error',
+                });  
+            }
+            throw e;
+        }
+
     }
 
     create(params = {}) {
@@ -36,6 +58,19 @@ class Resource {
 }
 
 
+class GroupResource extends Resource {
+    startLesson({id}) {
+        return this._handler(axios.post(`${BACKEND_URL}/${this.path}/${id}/start_lesson/`));
+    }
+}
 
-export const Groups = new Resource('groups');
-export const Students = new Resource('students');
+
+class StudentResource extends Resource {
+    resetAccess({id}) {
+        return this._handler(axios.post(`${BACKEND_URL}/${this.path}/${id}/reset_access/`));
+    }
+}
+
+
+export const Groups = new GroupResource('groups');
+export const Students = new StudentResource('students');
