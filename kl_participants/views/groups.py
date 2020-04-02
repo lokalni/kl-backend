@@ -31,7 +31,7 @@ class GroupViewSet(viewsets.ModelViewSet):
             # TODO - something smarter?
             raise ParseError('Brak dostępnego serwera.')
 
-        return HttpResponseRedirect(redirect_to=redirect_url)
+        return Response(data={'redirect': redirect_url})
 
     @transaction.atomic
     @action(detail=False, methods=["post"], serializer_class=CreateGroupFullRequestSerializer)

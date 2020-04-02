@@ -37,9 +37,10 @@ export default {
       },
     },
     methods: {
-      startAndJoin($event, group) {
+      async startAndJoin($event, group) {
         $event.stopPropagation();
-        Groups.startLesson(group);
+        const {redirect} = await Groups.startLesson(group);
+        window.location = redirect;
       }
     }
 }

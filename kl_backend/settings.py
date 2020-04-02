@@ -172,4 +172,5 @@ REST_FRAMEWORK = {
 BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')
 
 
-LOGIN_REDIRECT = env.str('DJ_LOGIN_REDIRECT', default='/')
+# App domain, i.e teleklasa.lokalni.pl
+DOMAIN = env.str('DJ_DOMAIN')

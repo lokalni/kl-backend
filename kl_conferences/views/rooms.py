@@ -13,7 +13,7 @@ from kl_participants.models import Student
 
 
 def limbo_url(token):
-    return f'{settings.LOGIN_REDIRECT}/#/limbo/?token={token}'
+    return f'{settings.DOMAIN}/#/limbo/?token={token}'
 
 
 class RoomViewSet(viewsets.ModelViewSet):
