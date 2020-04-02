@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 3rd party
     'rest_framework',
+    'django_filters',
     'corsheaders',
 
     # project
@@ -151,6 +152,10 @@ STATIC_ROOT = 'staticfiles'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 
 BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')

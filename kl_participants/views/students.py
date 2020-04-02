@@ -11,6 +11,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all().order_by('-id')
     serializer_class = StudentSerializer
     permission_classes = []  # TODO
+    filterset_fields = ['group']
 
     @action(detail=True, methods=["post"], serializer_class=Serializer)
     def reset_access(self, request, pk):

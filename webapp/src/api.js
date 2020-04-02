@@ -37,19 +37,19 @@ class Resource {
     }
 
     create(params = {}) {
-        return this._handler(axios.put(`${BACKEND_URL}/${this.path}/`, params))
+        return this._handler(axios.put(`${BACKEND_URL}/${this.path}/`, {params}))
     }
 
     read(objId, params = {}) {
-        return this._handler(axios.get(`${BACKEND_URL}/${this.path}/${objId}`, params));
+        return this._handler(axios.get(`${BACKEND_URL}/${this.path}/${objId}`, {params}));
     }
 
     list(params = {}) {
-        return this._handler(axios.get(`${BACKEND_URL}/${this.path}/`, params));
+        return this._handler(axios.get(`${BACKEND_URL}/${this.path}/`, {params}));
     }
 
     update(objId, params = {}) {
-        return this._handler(axios.post(`${BACKEND_URL}/${this.path}/${objId}`, params));
+        return this._handler(axios.post(`${BACKEND_URL}/${this.path}/${objId}`, {params}));
     }
 
     delete(objId) {

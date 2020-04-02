@@ -38,7 +38,7 @@
     },
     methods: {
       async loadStudents() {
-        this.students = await Students.list({group_id: this.$route.params.id});
+        this.students = await Students.list({group: this.$route.params.id});
         window.console.log("Students Fetched", this.groups);
       },
 
