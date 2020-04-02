@@ -3,6 +3,7 @@ from django.conf import settings
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from kl_conferences.bbb_api import BigBlueButtonAPI
@@ -18,10 +19,8 @@ def limbo_url(token):
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all().order_by('-id')
     serializer_class = RoomSerializer
-    # FIXME
-    permission_classes = []
 
-    @action(detail=False, methods=['get'], url_path='join/(?P<token>[^/]+)/?')
+    @action(detail=False, methods=['get'], url_path='join/(?P<token>[^/]+)/?', permission_classes=[])
     def join(self, request, token):
         token = token.upper()
         student = get_object_or_404(Student, access_token=token)

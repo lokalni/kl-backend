@@ -2,21 +2,20 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.exceptions import APIException, ParseError
+from rest_framework.exceptions import ParseError
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
 from kl_conferences.lesson_bridging_service import start_lesson
 from kl_conferences.models import ServerNode
-from kl_participants.models import Group, Moderator
+from kl_participants.models import Group
 from kl_participants.serializers.group_serializers import GroupSerializer, CreateGroupFullRequestSerializer
 
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all().order_by('-id')
     serializer_class = GroupSerializer
-    # FIXME
-    permission_classes = []
 
     # TODO - trim results to assigned groups
     @action(detail=True, methods=["post"], serializer_class=Serializer)

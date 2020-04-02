@@ -36,5 +36,10 @@ class Moderator(models.Model):
     def uuid(self):
         return f'moderator:{self.id}'
 
+    @property
+    def access_url(self):
+        # TODO - use settings var for domain
+        return f'localhost:8000/l/{self.access_token}'
+
 
 admin.site.register(Moderator)

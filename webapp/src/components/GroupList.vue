@@ -19,7 +19,7 @@
           <td>
             <button type="button" class="btn btn-primary"
                     @click="$event => startAndJoin($event, group)"
-            >Lekcja</button>
+            >Rozpocznij Lekcję</button>
           </td>
         </tr>
       </tbody>

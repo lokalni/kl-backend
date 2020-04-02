@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # CORS
 CORS_ORIGIN_WHITELIST = env.list('DJ_CORS_ORIGIN_WHITELIST', default=[])
-
+CORS_ALLOW_CREDENTIALS = True
 
 LOGGING = {
     'version': 1,
@@ -154,7 +154,13 @@ STATICFILES_DIRS = (
 )
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 }
 
 

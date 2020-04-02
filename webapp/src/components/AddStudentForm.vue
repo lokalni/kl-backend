@@ -30,6 +30,7 @@ export default {
         studentSubmitted() {
             const student = {name: this.name};
             this.$emit('submittedStudent', student);
+            this.name = '';
             console.log("Student Submitted", student);
         }
     }

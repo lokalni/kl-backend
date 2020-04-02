@@ -1,8 +1,29 @@
 import axios from 'axios';
 import Vue from 'vue'
+import router from "@/router";
+import {ROUTE_NAMES} from "@/router";
 
 const TOAST_DURATION = 6000;
 const BACKEND_URL = process.env.BACKEND_URL;
+
+
+
+// Set withCredentials on $axios before creating instance
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+
+// Create a custom axios instance
+const api = axios.create({
+    baseURL: BACKEND_URL,
+    responseType: 'json',
+    timeout: 10000,
+    // withCredentials: true,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Content-Type': 'application/json'
+    }
+});
 
 
 class Resource {
@@ -16,7 +37,7 @@ class Resource {
             const resp = await promise;
             return resp.data;
         } catch (e) {
-            window.console.log(e);
+            window.console.log("EXC", e);
             const detail = (e.response.data || {}).detail || '';
             const respCode = e.response.status;
 
@@ -25,6 +46,14 @@ class Resource {
                     duration: TOAST_DURATION,
                     type: 'error',
                 });
+            } else if (respCode === 403) {
+                Vue.toasted.show(`Nie jesteś zalogowany. Użyj swojego linku.`, {
+                    duration: TOAST_DURATION,
+                    type: 'warn',
+                });
+                router.push({
+                  name: ROUTE_NAMES.MAIN,
+                })
             } else if (respCode === 500) {
                 Vue.toasted.show(`Nieznany błąd!`, {
                     duration: TOAST_DURATION,
@@ -37,37 +66,37 @@ class Resource {
     }
 
     create(params = {}) {
-        return this._handler(axios.post(`${BACKEND_URL}/${this.path}/`, params))
+        return this._handler(api.post(`/${this.path}/`, params))
     }
 
     read(objId, params = {}) {
-        return this._handler(axios.get(`${BACKEND_URL}/${this.path}/${objId}`, {params}));
+        return this._handler(api.get(`/${this.path}/${objId}`, {params}));
     }
 
     list(params = {}) {
-        return this._handler(axios.get(`${BACKEND_URL}/${this.path}/`, {params}));
+        return this._handler(api.get(`/${this.path}/`, {params}));
     }
 
     update(objId, params = {}) {
-        return this._handler(axios.post(`${BACKEND_URL}/${this.path}/${objId}`, {params}));
+        return this._handler(api.post(`/${this.path}/${objId}`, {params}));
     }
 
     delete(objId) {
-        return this._handler(axios.delete(`${BACKEND_URL}/${this.path}/${objId}/`));
+        return this._handler(api.delete(`/${this.path}/${objId}/`));
     }
 }
 
 
 class GroupResource extends Resource {
     startLesson({id}) {
-        return this._handler(axios.post(`${BACKEND_URL}/${this.path}/${id}/start_lesson/`));
+        return this._handler(api.post(`/${this.path}/${id}/start_lesson/`));
     }
 }
 
 
 class StudentResource extends Resource {
     resetAccess({id}) {
-        return this._handler(axios.post(`${BACKEND_URL}/${this.path}/${id}/reset_access/`));
+        return this._handler(api.post(`/${this.path}/${id}/reset_access/`));
     }
 
     buildJoinUrl(token) {
