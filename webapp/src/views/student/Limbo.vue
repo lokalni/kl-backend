@@ -3,6 +3,7 @@
         <div class="row">
           <div class="col-md-12 my-3">
               <h2>Oczekiwanie na rozpoczęcie zajęć...</h2>
+              <!-- TODO - add spinner, more info? -->
           </div>
         </div>
     </div>

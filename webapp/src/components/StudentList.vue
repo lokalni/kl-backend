@@ -15,9 +15,12 @@
           <th scope="row">{{idx + 1}}</th>
           <td>{{student.display_name}}</td>
           <td>{{student.access_url}}</td>
-          <button type="button" class="btn btn-primary"
-                    @click="$event => resetAccessLink($event, student)"
-            >Resetuj Dostęp</button>
+            <button type="button" class="btn btn-primary m-2"
+                      @click="$event => actionAccessLink($event, student)"
+              >Resetuj Dostęp</button>
+            <button type="button" class="btn btn-danger m-2"
+                      @click="$event => actionRemoveStudent($event, student)"
+              >Usuń</button>
         </tr>
       </tbody>
     </table>
@@ -34,10 +37,15 @@
           },
         },
         methods: {
-          resetAccessLink($event, student) {
+          async actionAccessLink($event, student) {
             $event.stopPropagation();
-            const updatedStudent = Students.resetAccess(student);
+            const updatedStudent = await Students.resetAccess(student);
             this.$emit('updatedStudent', updatedStudent);
+          },
+          async actionRemoveStudent($event, student) {
+            $event.stopPropagation();
+            await Students.delete(student.id);
+            this.$emit('updatedStudent', student);
           }
         }
     }

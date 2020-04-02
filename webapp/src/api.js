@@ -37,7 +37,7 @@ class Resource {
     }
 
     create(params = {}) {
-        return this._handler(axios.put(`${BACKEND_URL}/${this.path}/`, {params}))
+        return this._handler(axios.post(`${BACKEND_URL}/${this.path}/`, params))
     }
 
     read(objId, params = {}) {
@@ -53,7 +53,7 @@ class Resource {
     }
 
     delete(objId) {
-        return this._handler(axios.delete(`${BACKEND_URL}/${this.path}/${objId}`));
+        return this._handler(axios.delete(`${BACKEND_URL}/${this.path}/${objId}/`));
     }
 }
 
