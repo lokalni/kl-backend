@@ -23,3 +23,8 @@ docker_to_prod:
 
 pip_install:
 	docker-compose run --no-deps --rm kl-backend pip install -r requirements.txt
+
+
+lame_build:
+	docker-compose run --no-deps --rm kl-webapp npm run build
+	docker-compose run --no-deps --rm kl-backend python manage.py collectstatic --noinput

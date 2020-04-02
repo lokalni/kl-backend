@@ -151,6 +151,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'staticfiles'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
+    # FIXME
+    os.path.join(BASE_DIR, 'webapp/dist'),
 )
 
 REST_FRAMEWORK = {

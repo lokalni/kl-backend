@@ -19,8 +19,8 @@ COPY . /code
 ARG BACKEND_URL=__BACKEND_URL__
 ENV BACKEND_URL ${BACKEND_URL}
 
-# TODO: uncomment that to Prepare build for prod
-#RUN npm run build
+# Prepare build for prod
+RUN npm run build
 
 # EXPOSE Webpack ports
 EXPOSE 8080
