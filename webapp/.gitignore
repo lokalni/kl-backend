@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-# /dist - it's lame, we need it temporary
+/dist - it's lame, we need it temporary
 
 # local env files
 .env.local

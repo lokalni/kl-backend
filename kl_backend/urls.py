@@ -14,8 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
-from django.conf import settings
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from kl_participants.views import *
@@ -28,16 +27,8 @@ router.register(r'rooms', RoomViewSet, basename='rooms')
 router.register(r'nodes', ServerNodeSelfServiceViewSet, basename='nodes')
 urlpatterns = router.urls
 
-
-# FIXME
-from django.conf.urls.static import static
-
 urlpatterns = [
-    # FIXME lame AF
-    path('', lambda r: HttpResponseRedirect('/static/index.html')),
-    re_path(r'^(?P<req_path>(js|css|img|favicon.ico)/.*)$', lambda r, req_path: HttpResponseRedirect(f'/static/{req_path}')),
-
     path('<str:token>', lambda r, token: HttpResponseRedirect(f'/rooms/join/{token}')),
     path('admin/', admin.site.urls),
     path(r'l/<str:token>', quick_login)
-] + router.urls + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + router.urls

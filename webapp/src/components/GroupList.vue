@@ -40,6 +40,7 @@ export default {
       async startAndJoin($event, group) {
         $event.stopPropagation();
         const {redirect} = await Groups.startLesson(group);
+        window.console.log("Received redirect url", redirect);
         window.location = redirect;
       }
     }
