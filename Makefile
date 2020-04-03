@@ -17,14 +17,5 @@ test:
 makemigrations:
 	${ON_BACKEND_RUN} python manage.py makemigrations
 
-docker_to_prod:
-	kubectl config set-context --current --namespace=kl-prod
-	kubectl apply -f devops/k8s/kl_deploy_app.yml
-
 pip_install:
 	docker-compose run --no-deps --rm kl-backend pip install -r requirements.txt
-
-
-lame_build:
-	docker-compose run --no-deps --rm kl-webapp npm run build
-	docker-compose run --no-deps --rm kl-backend python manage.py collectstatic --noinput

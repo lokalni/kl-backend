@@ -5,7 +5,6 @@ django-filter
 django-cors-headers==3.2.1
 psycopg2-binary==2.8.4
 requests==2.23.0
-dj-static==0.0.6
 shortuuid==1.0.1
 # temporary add test requirements to prod, lol
 model_mommy
