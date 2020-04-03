@@ -2,7 +2,8 @@ import uuid
 
 from django.contrib import admin
 from django.contrib.auth.models import User
-from django.db import models, transaction
+from django.db import models
+from django.conf import settings
 
 from kl_backend.utils import get_token
 
@@ -23,14 +24,6 @@ class Moderator(models.Model):
     class Meta:
         db_table = 'moderators'
 
-    # @transaction.atomic()
-    # def save(self, *args, **kwargs):
-    #     # When saving object, create user automagically
-    #     is_new = not self.pk and not self.user
-    #     super(Moderator, self).save(*args, **kwargs)
-    #     if is_new:
-    #         self.user = User.objects.create(username=self.uuid)
-    #         self.save()
 
     @property
     def uuid(self):
@@ -38,8 +31,7 @@ class Moderator(models.Model):
 
     @property
     def access_url(self):
-        # TODO - use settings var for domain
-        return f'localhost:8000/l/{self.access_token}'
+        return f'{settings.DOMAIN}/l/{self.access_token}'
 
 
 admin.site.register(Moderator)

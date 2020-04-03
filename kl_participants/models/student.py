@@ -1,4 +1,5 @@
 from django.db import models, transaction
+from django.conf import settings
 
 from kl_backend.utils import get_token
 
@@ -19,8 +20,7 @@ class Student(models.Model):
 
     @property
     def access_url(self):
-        # TODO - use settings var for domain
-        return f'tk.lokalni.pl/{self.access_token}'
+        return f'{settings.DOMAIN}/{self.access_token}'
 
     @classmethod
     @transaction.atomic
