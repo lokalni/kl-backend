@@ -12,7 +12,6 @@ from kl_conferences.serializers.server_node_serializer import (
 class ServerNodeSelfServiceViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = ServerNodeRegisterRequestSerializer
     
-    @action(detail=False, methods=['post'], permission_classes=[])
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
