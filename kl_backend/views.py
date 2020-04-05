@@ -16,7 +16,7 @@ class AccountsViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     def get_session(self, request):
         return Response(UserSerializer(instance=request.user).data)
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], authentication_classes=[])
     def login(self, request):
         email = request.data['email']
         password = request.data['password']
