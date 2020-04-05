@@ -31,11 +31,11 @@ router.register(r'nodes', conference_views.ServerNodeSelfServiceViewSet, basenam
 router.register(r'accounts', backend_views.AccountsViewSet, basename='accounts')
 urlpatterns = router.urls
 
-api_urlpatterns = [
+root_urlpatterns = [
     path('<str:token>', lambda r, token: HttpResponseRedirect(f'/rooms/join/{token}')),
     path('admin/', admin.site.urls),
     path(r'l/<str:token>', participants_views.quick_login),
-] + router.urls
+]
 
 
-urlpatterns = [url(r'^api/v1/', include(api_urlpatterns))]
+urlpatterns = [url(r'^api/v1/', include(router.urls))] + root_urlpatterns
