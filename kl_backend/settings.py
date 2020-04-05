@@ -123,7 +123,6 @@ CSRF_COOKIE_NAME = "csrftoken"
 CSRF_TRUSTED_ORIGINS = [DOMAIN]
 CSRF_COOKIE_DOMAIN = '.'.join(DOMAIN.split('.')[-2:])
 
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
