@@ -52,9 +52,6 @@ class Resource {
                     duration: TOAST_DURATION,
                     type: 'warn',
                 });
-                router.push({
-                  name: ROUTE_NAMES.MAIN,
-                })
             } else if (respCode === 500) {
                 Vue.toasted.show(`Nieznany błąd!`, {
                     duration: TOAST_DURATION,
@@ -106,6 +103,10 @@ class StudentResource extends Resource {
 }
 
 class AccountsResource extends Resource {
+    getSession() {
+        return this._handler(api.get(`/${this.path}/get_session/`))
+    }
+
     login({email, password}) {
         return this._handler(api.post(`/${this.path}/login/`, {email, password}));
     }

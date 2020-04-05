@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import store from '@/store';
 
 Vue.use(VueRouter);
 
@@ -41,6 +42,19 @@ const routes = [
 
 const router = new VueRouter({
   routes
+});
+
+router.beforeEach(async (to, from, next) => {
+  window.console.log("Updating session");
+  if (to.name !== ROUTE_NAMES.MAIN) {
+      try {
+        await store.dispatch('updateSession');
+      } catch (e) {
+        await store.dispatch('logout');
+        return next({name: ROUTE_NAMES.MAIN})
+      }
+  }
+  next();
 });
 
 export default router

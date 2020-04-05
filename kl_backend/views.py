@@ -4,12 +4,17 @@ from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from kl_backend.serializers import UserSerializer
 
 
 class AccountsViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     permission_classes = []
+
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def get_session(self, request):
+        return Response(UserSerializer(instance=request.user).data)
 
     @action(detail=False, methods=['post'])
     def login(self, request):

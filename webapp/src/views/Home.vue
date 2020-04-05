@@ -2,7 +2,7 @@
   <div class="home">
     <TeacherNavbar/>
     <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld v-if='user' msg="Welcome to Your Vue.js App"/>
+    <InfoMain v-if='user' msg="Witaj w Teleklasie"/>
     <Login v-else/>
   </div>
 </template>
@@ -10,7 +10,7 @@
 <script>
 // @ is an alias to /src
 import { mapState } from 'vuex';
-import HelloWorld from '@/components/HelloWorld.vue';
+import InfoMain from '@/components/InfoMain.vue';
 import TeacherNavbar from '@/components/TeacherNavbar.vue';
 import Login from '@/components/Login.vue';
 
@@ -19,7 +19,7 @@ export default {
   components: {
     Login,
     TeacherNavbar,
-    HelloWorld
+    InfoMain
   },
   computed: {
     ...mapState(['user'])

@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {ROUTE_NAMES} from "@/router";
-import router from "@/router";
 import {Accounts} from '@/api';
 
 Vue.use(Vuex);
@@ -16,6 +14,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async updateSession(context) {
+      const userData = await Accounts.getSession();
+      context.commit('setUser', userData);
+    },
+
     async login(context, {email, password}) {
       const userData = await Accounts.login({email, password});
       window.console.log("User logged in:", userData);
@@ -24,7 +27,6 @@ export default new Vuex.Store({
     async logout(context) {
       await Accounts.logout();
       context.commit('setUser', null);
-      router.push({name: ROUTE_NAMES.MAIN});
     }
   },
   modules: {
