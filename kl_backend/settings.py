@@ -122,8 +122,7 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_NAME = "csrftoken"
 # FIXME
 CSRF_TRUSTED_ORIGINS = ['tk.lokalni.pl']
-# FIXME
-CSRF_COOKIE_DOMAIN = '.'.join(DOMAIN.split('.')[-2:])
+
 
 LOGGING = {
     'version': 1,
