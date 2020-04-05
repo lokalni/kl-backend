@@ -21,8 +21,13 @@ export default {
     TeacherNavbar,
     InfoMain
   },
-  beforeRouteEnter() {
-    this.updateSession();
+  beforeRouteEnter(to, from, next) {
+    try {
+      this.updateSession();
+    } catch (e) {
+      window.console.log("Session updating failed.");
+    }
+    next();
   },
   computed: {
     ...mapState(['user'])
