@@ -18,6 +18,8 @@ env = environ.Env()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# App domain, i.e teleklasa.lokalni.pl
+DOMAIN = env.str('DJ_DOMAIN')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -117,6 +119,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_TRUSTED_ORIGINS = [DOMAIN]
+CSRF_COOKIE_DOMAIN = '.'.join(DOMAIN.split('.')[-2:])
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -163,5 +170,3 @@ REST_FRAMEWORK = {
 BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')
 
 
-# App domain, i.e teleklasa.lokalni.pl
-DOMAIN = env.str('DJ_DOMAIN')

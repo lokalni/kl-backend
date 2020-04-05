@@ -1,7 +1,5 @@
 import axios from 'axios';
 import Vue from 'vue'
-import router from "@/router";
-import {ROUTE_NAMES} from "@/router";
 
 const TOAST_DURATION = 6000;
 const BACKEND_URL = process.env.BACKEND_URL;
@@ -11,7 +9,7 @@ const BACKEND_URL = process.env.BACKEND_URL;
 // Set withCredentials on $axios before creating instance
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+axios.defaults.xsrfHeaderName = "X-CSRFToken";
 // axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
 
 // Create a custom axios instance
