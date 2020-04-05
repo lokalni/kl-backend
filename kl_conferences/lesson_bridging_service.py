@@ -5,25 +5,40 @@ from kl_conferences.bbb_api import BigBlueButtonAPI, RoomAlreadyExistsError
 from kl_conferences.models import ServerNode, Room
 
 
+def get_group_active_meeting(group):
+    room = Room.objects.filter(group=group).last()
+    if room:
+        server = room.server_node
+        api = BigBlueButtonAPI(server.hostname, server.api_secret)
+        if api.is_meeting_running(room.bbb_meeting_id):
+            return room
+
+    return None
+
+
 @transaction.atomic
 def start_lesson(group, moderator):
     """"""
-    server = ServerNode.assign_server(group=group)
-    room, _ = Room.objects.get_or_create(server_node=server, group=group)
+    room = get_group_active_meeting(group)
 
-    api = BigBlueButtonAPI(server.hostname, server.api_secret)
+    # group does not have running meeting, create one
+    if not group:
+        server = ServerNode.assign_server(group=group)
+        room, _ = Room.objects.get_or_create(server_node=server, group=group)
 
-    try:
-        bbb_room = api.create_room(
-            meeting_id=room.bbb_meeting_id,
-            attendee_secret=User.objects.make_random_password(),
-            moderator_secret=User.objects.make_random_password(),
-        )
-        room.attendee_secret = bbb_room.attendeePW
-        room.moderator_secret = bbb_room.moderatorPW
-        room.save()
-    except RoomAlreadyExistsError:
-        pass
+        api = BigBlueButtonAPI(server.hostname, server.api_secret)
+
+        try:
+            bbb_room = api.create_room(
+                meeting_id=room.bbb_meeting_id,
+                attendee_secret=User.objects.make_random_password(),
+                moderator_secret=User.objects.make_random_password(),
+            )
+            room.attendee_secret = bbb_room.attendeePW
+            room.moderator_secret = bbb_room.moderatorPW
+            room.save()
+        except RoomAlreadyExistsError:
+            pass
 
     redirect_url = api.get_join_url(
         meeting_id=room.bbb_meeting_id,

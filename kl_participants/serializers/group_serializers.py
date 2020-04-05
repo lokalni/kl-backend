@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from kl_participants.models import Group, Student
+from kl_participants.models import Group, Student, Moderator
 
 
 class DelimitedStringsListField(serializers.CharField):
@@ -16,7 +16,14 @@ class DelimitedStringsListField(serializers.CharField):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    students_count = serializers.IntegerField(source='student_set.count')
+    students_count = serializers.IntegerField(source='student_set.count', read_only=True)
+
+    @transaction.atomic()
+    def create(self, validated_data):
+        current_user_mod = self.context['request'].user.moderator
+        new_group = super(GroupSerializer, self).create(validated_data)
+        current_user_mod.groups.add(new_group)
+        return new_group
 
     class Meta:
         model = Group

@@ -111,8 +111,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # CORS
-CORS_ORIGIN_WHITELIST = env.list('DJ_CORS_ORIGIN_WHITELIST', default=[])
+# CORS_ORIGIN_WHITELIST = ['http://*', 'https://*']# env.list('DJ_CORS_ORIGIN_WHITELIST', default=[])
+# FIXME - with whitelist there is no header in OPTIONS response, looks like lib bug
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
 
 LOGGING = {
     'version': 1,
@@ -142,11 +145,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],

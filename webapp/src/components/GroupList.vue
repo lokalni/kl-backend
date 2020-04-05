@@ -20,6 +20,9 @@
             <button type="button" class="btn btn-primary"
                     @click="$event => startAndJoin($event, group)"
             >Rozpocznij Lekcję</button>
+            <button type="button" class="btn btn-danger m-2"
+                      @click="$event => onDeleteClicked($event, group)"
+              >Usuń</button>
           </td>
         </tr>
       </tbody>
@@ -40,8 +43,12 @@ export default {
       async startAndJoin($event, group) {
         $event.stopPropagation();
         const {redirect} = await Groups.startLesson(group);
-        window.console.log("Received redirect url", redirect);
+        window.console.log("Received redirect url CHECK_DEPLOYMENT_CACHE", redirect);
         window.location = redirect;
+      },
+      onDeleteClicked($event, group) {
+        $event.stopPropagation();
+        this.$emit('deleteGroup', group);
       }
     }
 }

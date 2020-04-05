@@ -13,22 +13,29 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.http import HttpResponseRedirect
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from kl_participants.views import *
-from kl_conferences.views import *
+from kl_participants import views as participants_views
+from kl_conferences import views as conference_views
+from kl_backend import views as backend_views
 
 router = DefaultRouter()
-router.register(r'students', StudentViewSet, basename='students')
-router.register(r'groups', GroupViewSet, basename='groups')
-router.register(r'rooms', RoomViewSet, basename='rooms')
-router.register(r'nodes', ServerNodeSelfServiceViewSet, basename='nodes')
+router.register(r'students', participants_views.StudentViewSet, basename='students')
+router.register(r'groups', participants_views.GroupViewSet, basename='groups')
+router.register(r'rooms', conference_views.RoomViewSet, basename='rooms')
+router.register(r'nodes', conference_views.ServerNodeSelfServiceViewSet, basename='nodes')
+router.register(r'accounts', backend_views.AccountsViewSet, basename='accounts')
 urlpatterns = router.urls
 
-urlpatterns = [
+api_urlpatterns = [
     path('<str:token>', lambda r, token: HttpResponseRedirect(f'/rooms/join/{token}')),
     path('admin/', admin.site.urls),
-    path(r'l/<str:token>', quick_login)
+    path(r'l/<str:token>', participants_views.quick_login),
 ] + router.urls
+
+
+urlpatterns = [url(r'^api/v1/', include(api_urlpatterns))]

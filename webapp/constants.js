@@ -1,0 +1,18 @@
+export const REGIONS = {
+    DOLNOSLASKIE: 'dolnoslaskie',
+    KUJAWSKO_POMORSKIE: 'kujawsko_pomorskie',
+    LUBELSKIE: 'lubelskie',
+    LUBUSKIE: 'lubuskie',
+    LODZKIE: 'lodzkie',
+    MALOPOLSKIE: 'malopolskie',
+    MAZOWIECKIE: 'mazowieckie',
+    OPOLSKIE: 'opolskie',
+    PODKARPACKIE: 'podkarpackie',
+    PODLASKIE: 'podlaskie',
+    POMORSKIE: 'pomorskie',
+    SLASKIE: 'slaskie',
+    SWIETOKRZYSKIE: 'swietokrzyskie',
+    WARMINSKO_MAZURSKIE: 'warminsko_mazurskie',
+    WIELKOPOLSKIE: 'wielkopolskie',
+    ZACHODNIOPOMORSKIE: 'zachodniopomorskie',
+};

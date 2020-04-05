@@ -16,13 +16,17 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all().order_by('-id')
     serializer_class = GroupSerializer
 
+    def get_queryset(self):
+        # Filter to allow only modifying assigned groups
+        return self.queryset.filter(moderator__user=self.request.user)
+
     # TODO - trim results to assigned groups
     @action(detail=True, methods=["post"], serializer_class=Serializer)
     def start_lesson(self, request, pk):
         """Create and join as moderator."""
         group = self.get_object()
         # TODO - get moderator from user
-        moderator = group.moderator_set.last()
+        moderator = group.moderator_set.get(user=request.user)
 
         try:
             redirect_url = start_lesson(group, moderator)

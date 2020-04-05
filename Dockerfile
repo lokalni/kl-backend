@@ -15,8 +15,6 @@ RUN pip install -r /code/requirements.txt
 
 COPY . code
 WORKDIR code
-RUN mkdir -p /code/static/ /code/staticfiles/
-RUN DJ_SECRET_KEY=build_time DJ_DATABASES_DEFAULT_URL=postgresql://localhost/dummy DJ_ALLOWED_HOSTS=localhost python manage.py collectstatic --noinput
 
 # Declare late to use as much cache as possible
 ARG BUILD_COMMIT_SHA

@@ -12,15 +12,16 @@ const BACKEND_URL = process.env.BACKEND_URL;
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+// axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
 
 // Create a custom axios instance
 const api = axios.create({
-    baseURL: BACKEND_URL,
+    baseURL: `${BACKEND_URL}/api/v1`,
     responseType: 'json',
     timeout: 10000,
     // withCredentials: true,
     headers: {
-      'X-Requested-With': 'XMLHttpRequest',
+      // 'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/json'
     }
 });
@@ -58,7 +59,7 @@ class Resource {
                 Vue.toasted.show(`Nieznany błąd!`, {
                     duration: TOAST_DURATION,
                     type: 'error',
-                });  
+                });
             }
             throw e;
         }
@@ -104,6 +105,17 @@ class StudentResource extends Resource {
     }
 }
 
+class AccountsResource extends Resource {
+    login({email, password}) {
+        return this._handler(api.post(`/${this.path}/login/`, {email, password}));
+    }
+
+    logout() {
+        return this._handler(api.post(`/${this.path}/logout/`));
+    }
+}
+
 
 export const Groups = new GroupResource('groups');
 export const Students = new StudentResource('students');
+export const Accounts = new AccountsResource('accounts');
