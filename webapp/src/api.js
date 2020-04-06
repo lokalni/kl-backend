@@ -113,8 +113,14 @@ class AccountsResource extends Resource {
     }
 }
 
+class ModeratorResource extends Resource {
+    resetAccess({id}) {
+        return this._handler(api.post(`/${this.path}/${id}/reset_access/`));
+    }
+}
+
 
 export const Groups = new GroupResource('groups');
 export const Students = new StudentResource('students');
 export const Accounts = new AccountsResource('accounts');
-export const Moderators = new Resource('moderators');
+export const Moderators = new ModeratorResource('moderators');

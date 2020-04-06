@@ -1,8 +1,12 @@
 <template>
     <div v-if="user" id="nav">
 <!--        <router-link to="/">Informacje</router-link> |-->
-        <router-link :to="{name: ROUTE_NAMES.TEACHER_GROUPS}">Moje klasy</router-link> |
-        <router-link v-if="user.is_staff" :to="{name: ROUTE_NAMES.ADMIN_MODERATORS}">Moderatorzy</router-link> |
+        <template>
+            <router-link :to="{name: ROUTE_NAMES.TEACHER_GROUPS}">Moje klasy</router-link> |
+        </template>
+        <template v-if="user.is_staff">
+            <router-link :to="{name: ROUTE_NAMES.ADMIN_MODERATORS}">Moderatorzy</router-link> |
+        </template>
         <a @click="doLogout">Wyloguj</a>
     </div>
 </template>

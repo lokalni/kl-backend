@@ -1,17 +1,14 @@
 <template>
     <form @submit="moderatorSubmitted">
       <div class="form-group">
-        <label for="exampleInputEmail1">Podaj unikalny identyfikator dla konferencji.</label>
-        <input v-model="display_name" type="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Unikalny identyfikator.">
-        <small id="emailHelp" class="form-text text-muted">Podaj unikalny identyfikator.</small>
+        <input v-model="display_name" type="name" class="form-control" placeholder="Unikalny identyfikator">
       </div>
       <div class="form-group">
-        <label for="exampleInputName1">Email</label>
-        <input v-model= "email" type="email" class="form-control" id="exampleInputName1" placeholder="Adres email">
+        <input v-model= "email" type="email" class="form-control" placeholder="Adres email">
       </div>
       <button :disabled="!formValid" type="submit" class="btn btn-primary">Dodaj</button>
     </form>
-</template>
+</template
 
 <script>
 export default {
@@ -34,7 +31,7 @@ export default {
                 email: this.email,
             };
             this.$emit('moderatorSubmitted', moderator);
-            this.name = '';
+            this.display_name = this.email = '';
             console.log("moderatorSubmitted Submitted", moderator);
         }
     }
