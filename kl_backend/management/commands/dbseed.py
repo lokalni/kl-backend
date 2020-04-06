@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
+from model_mommy import mommy
 
 from kl_conferences.models import ServerNode
 from kl_participants.models import Group, Student, Moderator
@@ -27,13 +28,13 @@ class Command(BaseCommand):
         g3 = Group.objects.create(display_name='klasa 1B szkola 2')
 
         # Add teachers
-        m1 = Moderator.objects.create(display_name='Nauczyciel grupa 1 i 2', access_token='NAU1')
+        m1 = mommy.make(Moderator, display_name='Nauczyciel grupa 1 i 2', access_token='NAU1')
         m1.groups.add(g1, g2)
 
-        m2 = Moderator.objects.create(display_name='Nauczyciel grupa 1 i 3', access_token='NAU1')
+        m2 = mommy.make(Moderator, display_name='Nauczyciel grupa 1 i 3', access_token='NAU2')
         m2.groups.add(g1, g3)
 
-        m3 = Moderator.objects.create(display_name='Nauczyciel grupa 3', access_token='NAU3')
+        m3 = mommy.make(Moderator, Fdisplay_name='Nauczyciel grupa 3', access_token='NAU3')
         m3.groups.add(g3)
 
         # Add sample student to class groups
