@@ -3,7 +3,7 @@
     <TeacherNavbar/>
     <div class="row">
       <div class="col-md-12 my-3">
-        <h2>Studenci grupa</h2>
+        <h2>Lista uczniów w klasie</h2>
       </div>
     </div>
     <div class="row">
