@@ -14,6 +14,10 @@ class StudentViewSet(viewsets.ModelViewSet):
     filterset_fields = ['group']
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        # Filter to allow only modifying assigned groups
+        return self.queryset.filter(group__moderator=self.request.user.moderator)
+
     @action(detail=True, methods=["post"], serializer_class=Serializer)
     def reset_access(self, request, pk):
         """Create and join as moderator."""
