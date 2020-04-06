@@ -2,8 +2,8 @@
     <div>
         <div class="row">
           <div class="col-md-12 my-3">
-              <h2>Twoje lekcje rozpoczną się wkrótce</h2>
-              <h4>Pozostaw tą stronę otwartą i poczekaj na nauczyciela</h4>
+              <h2>Twoje lekcje jeszcze się nie rozpoczęły</h2>
+              <h4>Zostań na tej stronie i poczekaj na nauczyciela - nie musisz jej odświeżać.</h4>
           </div>
         </div>
     </div>
