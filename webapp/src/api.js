@@ -96,7 +96,7 @@ class StudentResource extends Resource {
     }
 
     buildJoinUrl(token) {
-        return `${BACKEND_URL}/rooms/join/${token}`;
+        return `${BACKEND_URL}/api/v1/rooms/join/${token}`;
     }
 }
 
