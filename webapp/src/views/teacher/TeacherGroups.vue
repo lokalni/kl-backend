@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-12 my-3">
         <h2>Lista twoich klas</h2>
-        <h5>Tutaj możesz dodać swoje klasy, a następnie dodać uczniów do klasy klikając w <u>nazwę klasy</b>. Po zadeklarowaniu uczniów i rozesłaniu do nich linków dostępowych możesz rozpocząć lekcję.</h5>
+        <h5>Tutaj możesz dodać swoje klasy, a następnie dodać uczniów do klasy klikając w <u>nazwę klasy</u>. Po zadeklarowaniu uczniów i rozesłaniu do nich linków dostępowych możesz rozpocząć lekcję.</h5>
       </div>
     </div>
     <div class="row">
