@@ -3,8 +3,8 @@
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Nazwa</th>
-          <th scope="col">Link Dostępowy</th>
+          <th scope="col">Imię ucznia</th>
+          <th scope="col">Link dostępowy</th>
           <th scope="col">Akcja</th>
         </tr>
       </thead>

@@ -3,9 +3,9 @@
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Nazwa</th>
-          <th scope="col">Liczba uczniow</th>
-          <th scope="col">Akcja</th>
+          <th scope="col">Nazwa klasy</th>
+          <th scope="col">Liczba uczniów</th>
+          <th scope="col">Akcje</th>
         </tr>
       </thead>
       <tbody>
@@ -19,7 +19,7 @@
           <td>
             <button type="button" class="btn btn-primary"
                     @click="$event => startAndJoin($event, group)"
-            >Rozpocznij Lekcję</button>
+            >Rozpocznij lekcję</button>
             <button type="button" class="btn btn-danger m-2"
                       @click="$event => onDeleteClicked($event, group)"
               >Usuń</button>

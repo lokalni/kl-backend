@@ -2,7 +2,7 @@
     <form @submit="studentSubmitted">
       <div class="form-row">
         <div class="col-4">
-          <input v-model="name" type="text" class="form-control" placeholder="Imie, nazwisko">
+          <input v-model="name" type="text" class="form-control" placeholder="Imię i nazwisko ucznia">
         </div>
         <div class="col-auto">
           <button type="submit" class="btn btn-primary mb-2"

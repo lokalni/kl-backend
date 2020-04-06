@@ -20,7 +20,7 @@
                    id="exampleInputPassword1"
                    placeholder="Hasło">
           </div>
-          <button type="submit" class="btn btn-primary">Zaloguj</button>
+          <button type="submit" class="btn btn-primary">Zaloguj się</button>
         </form>
     </div>
 </template>

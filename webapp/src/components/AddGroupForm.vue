@@ -2,11 +2,11 @@
     <form @submit="groupSubmitted">
       <div class="form-row">
         <div class="col-4">
-          <input v-model="name" type="text" class="form-control" placeholder="Nazwa grupy">
+          <input v-model="name" type="text" class="form-control" placeholder="Nazwa nowej klasy">
         </div>
         <div class="col-2">
            <select v-model="selectedRegion" class="form-control">
-              <option value="">Wybierz region...</option>
+              <option value="">Wybierz województwo</option>
               <option v-for="region in regionOptions" :key="region" :value="region">{{region}}</option>
            </select>
         </div>

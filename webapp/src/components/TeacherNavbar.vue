@@ -1,7 +1,7 @@
 <template>
     <div v-if="user" id="nav">
 <!--        <router-link to="/">Informacje</router-link> |-->
-        <router-link to="/groups">Grupy</router-link> |
+        <router-link to="/groups">Moje klasy</router-link> |
         <a @click="doLogout">Wyloguj</a>
     </div>
 </template>
