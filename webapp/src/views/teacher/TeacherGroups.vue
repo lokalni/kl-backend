@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <TeacherNavbar/>
+    <Navbar/>
     <div class="row">
       <div class="col-md-12 my-3">
         <h2>Lista twoich klas</h2>
@@ -27,7 +27,7 @@
   import {Groups} from '@/api';
   import GroupList from '@/components/GroupList.vue';
   import {ROUTE_NAMES} from "../../router";
-  import TeacherNavbar from '@/components/TeacherNavbar.vue';
+  import Navbar from '@/components/Navbar.vue';
   import AddGroupForm from "../../components/AddGroupForm";
 
   export default {
@@ -35,7 +35,7 @@
     components: {
       AddGroupForm,
       GroupList,
-      TeacherNavbar,
+      Navbar,
     },
     data() {
       // TODO - move to vuex, maybe at API call level

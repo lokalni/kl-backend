@@ -1,7 +1,8 @@
 <template>
     <div v-if="user" id="nav">
 <!--        <router-link to="/">Informacje</router-link> |-->
-        <router-link to="/groups">Moje klasy</router-link> |
+        <router-link :to="{name: ROUTE_NAMES.TEACHER_GROUPS}">Moje klasy</router-link> |
+        <router-link v-if="user.is_staff" :to="{name: ROUTE_NAMES.ADMIN_MODERATORS}">Moderatorzy</router-link> |
         <a @click="doLogout">Wyloguj</a>
     </div>
 </template>
@@ -12,7 +13,7 @@ import {ROUTE_NAMES} from "@/router";
 import router from '@/router';
 
 export default {
-    name: "TeacherNavbar.vue",
+    name: "Navbar",
     methods: {
         ...mapActions(['logout']),
         async doLogout() {
@@ -22,6 +23,7 @@ export default {
     },
     computed: {
         ...mapState(['user']),
+        ROUTE_NAMES: () => ROUTE_NAMES,
     },
 
 }

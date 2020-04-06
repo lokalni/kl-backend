@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <TeacherNavbar/>
+    <Navbar/>
     <img alt="Vue logo" src="../assets/logo.png">
     <InfoMain v-if='user' msg="Witaj w Teleklasie"/>
     <Login v-else/>
@@ -11,23 +11,18 @@
 // @ is an alias to /src
 import { mapState, mapActions } from 'vuex';
 import InfoMain from '@/components/InfoMain.vue';
-import TeacherNavbar from '@/components/TeacherNavbar.vue';
+import Navbar from '@/components/Navbar.vue';
 import Login from '@/components/Login.vue';
 
 export default {
   name: 'Home',
   components: {
     Login,
-    TeacherNavbar,
+    Navbar,
     InfoMain
   },
-  beforeRouteEnter(to, from, next) {
-    try {
-      this.updateSession();
-    } catch (e) {
-      window.console.log("Session updating failed.");
-    }
-    next();
+  beforeMount() {
+        this.updateSession();
   },
   computed: {
     ...mapState(['user'])

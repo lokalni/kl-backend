@@ -8,9 +8,10 @@ Vue.use(VueRouter);
 
 export const ROUTE_NAMES = {
   MAIN: 'main',
-  TEACHER_GROUPS: 'teacher-groups',
-  TEACHER_GROUP_DETAIL: 'teacher-group-details',
-  LIMBO: 'student-limbo',
+  TEACHER_GROUPS: 'teacher:groups',
+  TEACHER_GROUP_DETAIL: 'teacher:group-details',
+  LIMBO: 'student:limbo',
+  ADMIN_MODERATORS: 'admin:moderators',
 };
 
 const routes = [
@@ -37,7 +38,14 @@ const routes = [
     path: '/limbo',
     name: ROUTE_NAMES.LIMBO,
     component: () => import('../views/student/Limbo.vue'),
-  }
+  },
+
+  // Admin namespace
+  {
+    path: '/moderators',
+    name: ROUTE_NAMES.ADMIN_MODERATORS,
+    component: () => import('../views/admin/ManageModerators.vue'),
+  },
 ];
 
 const router = new VueRouter({
@@ -45,14 +53,15 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  if (to.name === ROUTE_NAMES.MAIN) {
+    return next();
+  }
   window.console.log("Updating session");
-  if (to.name !== ROUTE_NAMES.MAIN) {
-      try {
-        await store.dispatch('updateSession');
-      } catch (e) {
-        await store.dispatch('logout');
-        return next({name: ROUTE_NAMES.MAIN})
-      }
+  try {
+    await store.dispatch('updateSession');
+  } catch (e) {
+    window.console.log("Updating session failed.");
+    return next({name: ROUTE_NAMES.MAIN});
   }
   next();
 });

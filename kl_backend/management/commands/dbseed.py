@@ -18,8 +18,8 @@ class Command(BaseCommand):
         # Create django admin user
         User.objects.create_superuser('admin', 'admin@ddd.ddd', 'admin')
 
-        s1 = ServerNode.objects.create(display_name='Serwerek 1', hostname='abcdef.com')
-        s2 = ServerNode.objects.create(display_name='Serwerek 2', hostname='ghijkl.com')
+        s1 = ServerNode.objects.create(display_name='Serwer 1', hostname='abcdef.com')
+        s2 = ServerNode.objects.create(display_name='Serwer 2', hostname='ghijkl.com')
 
         # Add class groups
         g1 = Group.objects.create(display_name='klasa 3A szkola 1')
@@ -27,23 +27,23 @@ class Command(BaseCommand):
         g3 = Group.objects.create(display_name='klasa 1B szkola 2')
 
         # Add teachers
-        m1 = Moderator.objects.create(display_name='Profesur z pierwszej szkoly')
+        m1 = Moderator.objects.create(display_name='Nauczyciel grupa 1 i 2', access_token='NAU1')
         m1.groups.add(g1, g2)
 
-        m2 = Moderator.objects.create(display_name='Profesur w 2 szkolach dorabia')
+        m2 = Moderator.objects.create(display_name='Nauczyciel grupa 1 i 3', access_token='NAU1')
         m2.groups.add(g1, g3)
 
-        m3 = Moderator.objects.create(display_name='Profesur z drugiej szkoly')
+        m3 = Moderator.objects.create(display_name='Nauczyciel grupa 3', access_token='NAU3')
         m3.groups.add(g3)
 
         # Add sample student to class groups
-        Student.objects.create(display_name='Seba', group=g1, access_token='SEBA')
-        Student.objects.create(display_name='Karyna', group=g1, access_token='KARYNA')
+        Student.objects.create(display_name='uczen1', group=g1, access_token='UCZEN1')
+        Student.objects.create(display_name='uczen2', group=g1, access_token='UCZEN2')
 
-        Student.objects.create(display_name='Brian', group=g2, access_token='BRIAN')
-        Student.objects.create(display_name='Nicolette', group=g2, access_token='MAXOSIEM')
+        Student.objects.create(display_name='uczen3', group=g2, access_token='UCZEN3')
+        Student.objects.create(display_name='uczen4', group=g2, access_token='UCZEN4')
 
-        Student.objects.create(display_name='Nadzieja', group=g3, access_token='NADZIEJA')
-        Student.objects.create(display_name='Ahmed', group=g3, access_token='AHMED')
+        Student.objects.create(display_name='uczen5', group=g3, access_token='UCZEN5')
+        Student.objects.create(display_name='uczen6', group=g3, access_token='UCZEN6')
 
 

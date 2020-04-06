@@ -23,12 +23,14 @@ from kl_participants import views as participants_views
 from kl_conferences import views as conference_views
 from kl_backend import views as backend_views
 
+
 router = DefaultRouter()
+router.register(r'accounts', backend_views.AccountsViewSet, basename='accounts')
 router.register(r'students', participants_views.StudentViewSet, basename='students')
 router.register(r'groups', participants_views.GroupViewSet, basename='groups')
+router.register(r'moderators', participants_views.ModeratorViewSet, basename='moderators')
 router.register(r'rooms', conference_views.RoomViewSet, basename='rooms')
 router.register(r'nodes', conference_views.ServerNodeSelfServiceViewSet, basename='nodes')
-router.register(r'accounts', backend_views.AccountsViewSet, basename='accounts')
 urlpatterns = router.urls
 
 root_urlpatterns = [

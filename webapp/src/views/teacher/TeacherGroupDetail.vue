@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <TeacherNavbar/>
+    <Navbar/>
     <div class="row">
       <div class="col-md-12 my-3">
         <h2>Lista uczniów w klasie</h2>
@@ -26,14 +26,14 @@
 <script>
   import {Students} from '@/api';
   import StudentList from '@/components/StudentList.vue';
-  import TeacherNavbar from '@/components/TeacherNavbar.vue';
+  import Navbar from '@/components/Navbar.vue';
   import AddStudentForm from "../../components/AddStudentForm";
 
   export default {
     name: 'app',
     components: {
       AddStudentForm,
-      TeacherNavbar,
+      Navbar,
       StudentList,
     },
     data() {

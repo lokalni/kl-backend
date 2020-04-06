@@ -46,6 +46,7 @@ export default {
                   name: ROUTE_NAMES.TEACHER_GROUPS,
                 });
             } catch (e) {
+                window.console.log(e);
                 this.$toasted.show('Niepoprawny login lub hasło.', {duration: 3000, type: 'error'});
             }
         },

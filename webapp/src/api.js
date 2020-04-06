@@ -2,7 +2,6 @@ import axios from 'axios';
 import Vue from 'vue'
 
 const TOAST_DURATION = 6000;
-const BACKEND_URL = process.env.BACKEND_URL;
 
 
 
@@ -14,7 +13,7 @@ axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
 // Create a custom axios instance
 const api = axios.create({
-    baseURL: `${BACKEND_URL}/api/v1`,
+    baseURL: `/api/v1`,
     responseType: 'json',
     timeout: 10000,
     // withCredentials: true,
@@ -96,7 +95,7 @@ class StudentResource extends Resource {
     }
 
     buildJoinUrl(token) {
-        return `${BACKEND_URL}/api/v1/rooms/join/${token}`;
+        return `/api/v1/rooms/join/${token}`;
     }
 }
 
@@ -118,3 +117,4 @@ class AccountsResource extends Resource {
 export const Groups = new GroupResource('groups');
 export const Students = new StudentResource('students');
 export const Accounts = new AccountsResource('accounts');
+export const Moderators = new Resource('moderators');
