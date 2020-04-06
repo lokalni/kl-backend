@@ -4,6 +4,7 @@
     <div class="row">
       <div class="col-md-12 my-3">
         <h2>Lista uczniów w klasie</h2>
+        <h5>Każdy z uczniów zadeklarowanych w klasie posiada <u>indywidualny link</u> którego używa aby dołączyć do lekcji. Przycisk Resetuj Dostęp generuje link od nowa w przypadku gdy uczeń go zgubi, bądź podzieli się nim z niepożądanymi osobami. Aby rozpocząć lekcje uczniowie muszą najpierw otrzymać poniższe linki</h5>
       </div>
     </div>
     <div class="row">
