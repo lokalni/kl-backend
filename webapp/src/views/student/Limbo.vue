@@ -2,8 +2,8 @@
     <div>
         <div class="row">
           <div class="col-md-12 my-3">
-              <h2>Oczekiwanie na rozpoczęcie zajęć...</h2>
-              <!-- TODO - add spinner, more info? -->
+              <h2>Twoje lekcje rozpoczną się wkrótce</h2>
+              <h4>Pozostaw tą stronę otwartą i poczekaj na nauczyciela</h4>
           </div>
         </div>
     </div>

@@ -32,7 +32,7 @@ router.register(r'accounts', backend_views.AccountsViewSet, basename='accounts')
 urlpatterns = router.urls
 
 root_urlpatterns = [
-    path('<str:token>', lambda r, token: HttpResponseRedirect(f'/rooms/join/{token}')),
+    path('<str:token>', lambda r, token: HttpResponseRedirect(f'/api/v1/rooms/join/{token}')),
     path('admin/', admin.site.urls),
     path(r'l/<str:token>', participants_views.quick_login),
 ]
