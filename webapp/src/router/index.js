@@ -56,7 +56,7 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (to.meta.skipAuth) {
-    window.console.log("Skipping auth check for route", route);
+    window.console.log("Skipping auth check for route", to);
     return next();
   }
   window.console.log("Updating session");
