@@ -19,6 +19,7 @@ const routes = [
   {
     path: '/',
     name: ROUTE_NAMES.MAIN,
+    meta: {skipAuth: true},
     component: Home
   },
   {
@@ -37,6 +38,7 @@ const routes = [
   {
     path: '/limbo',
     name: ROUTE_NAMES.LIMBO,
+    meta: {skipAuth: true},
     component: () => import('../views/student/Limbo.vue'),
   },
 
@@ -53,7 +55,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.name === ROUTE_NAMES.MAIN) {
+  if (to.meta.skipAuth) {
+    window.console.log("Skipping auth check for route", route);
     return next();
   }
   window.console.log("Updating session");
