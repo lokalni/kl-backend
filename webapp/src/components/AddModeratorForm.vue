@@ -8,7 +8,7 @@
       </div>
       <button :disabled="!formValid" type="submit" class="btn btn-primary">Dodaj</button>
     </form>
-</template
+</template>
 
 <script>
 export default {

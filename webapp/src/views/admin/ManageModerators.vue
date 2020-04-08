@@ -43,7 +43,7 @@ export default {
     },
     methods: {
         async onModeratorSubmitted(moderator) {
-            Moderators.create(moderator);
+            await Moderators.create(moderator);
             await this.reload();
         },
         async reload() {
