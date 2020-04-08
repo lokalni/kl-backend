@@ -17,10 +17,12 @@
           <td>{{group.display_name}}</td>
           <td>{{group.students_count}}</td>
           <td>
-            <button type="button" class="btn btn-primary"
+            <button type="button" class="btn btn-primary m-1"
                     @click="$event => startAndJoin($event, group)"
             >Rozpocznij lekcję</button>
-            <button type="button" class="btn btn-danger m-2"
+            <button type="button" class="btn btn-primary m-1"
+            >Edytuj klasę</button>
+            <button type="button" class="btn btn-danger m-1"
                       @click="$event => onDeleteClicked($event, group)"
               >Usuń</button>
           </td>
