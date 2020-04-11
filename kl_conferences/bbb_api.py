@@ -156,7 +156,7 @@ class BigBlueButtonAPI:
             # 'logo':
             # 'bannerText':
             # 'copyright':
-            'muteOnStart': apibool(False),
+            'muteOnStart': apibool(True),
             'lockSettingsDisablePrivateChat': apibool(True),
             'lockSettingsDisablePublicChat': apibool(False),
             'lockSettingsDisableNote': apibool(False),
