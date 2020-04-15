@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import environ
+import sentry_sdk
+
+from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env()
 
@@ -165,4 +168,16 @@ REST_FRAMEWORK = {
 
 BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')
 
+# Sentry.io
 
+DJ_SENTRY_DSN = env.str('DJ_SENTRY_DSN', None)
+
+if DJ_SENTRY_DSN: # config should be loaded only for production when DJ_SENTRY_DSN is set
+    sentry_sdk.init(
+        dsn=DJ_SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )
