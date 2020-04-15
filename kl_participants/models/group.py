@@ -13,5 +13,8 @@ class Group(models.Model):
     class Meta:
         db_table = 'groups'
 
+    def last_meeting_room(self):
+        return self.room_set.last()
+
 
 admin.site.register(Group)

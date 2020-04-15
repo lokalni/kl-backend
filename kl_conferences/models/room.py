@@ -7,6 +7,7 @@ class Room(models.Model):
     group = models.ForeignKey('kl_participants.Group', on_delete=models.CASCADE)
     attendee_secret = models.CharField(max_length=64, null=True)
     moderator_secret = models.CharField(max_length=64, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'rooms'

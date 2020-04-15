@@ -36,7 +36,8 @@ class ServerNode(models.Model):
     def assign_server(cls, group):
         """Choose best server to host lesson for given group."""
         node_candidates = cls.objects.filter(
-            last_heartbeat__gt=now() - timedelta(seconds=cls.MAX_HEARTBEAT_DELAY)
+            last_heartbeat__gt=now() - timedelta(seconds=cls.MAX_HEARTBEAT_DELAY),
+            load_5m__isnull=False,
         ).annotate(load_per_cpu=ExpressionWrapper(F('load_5m')/F('cpu_count'), output_field=DecimalField()))
         same_region_low_load = node_candidates.filter(
             region=group.region,
@@ -93,6 +94,11 @@ class ServerNode(models.Model):
             server_node.save()
 
             return server_node
+
+    def disconnect_from_pool(self):
+        """Marks server as inactive."""
+        self.load_5m = None
+        self.save()
 
 
 admin.site.register(ServerNode)

@@ -34,7 +34,7 @@ class Command(BaseCommand):
         m2 = mommy.make(Moderator, display_name='Nauczyciel grupa 1 i 3', access_token='NAU2')
         m2.groups.add(g1, g3)
 
-        m3 = mommy.make(Moderator, Fdisplay_name='Nauczyciel grupa 3', access_token='NAU3')
+        m3 = mommy.make(Moderator, display_name='Nauczyciel grupa 3', access_token='NAU3')
         m3.groups.add(g3)
 
         # Add sample student to class groups
