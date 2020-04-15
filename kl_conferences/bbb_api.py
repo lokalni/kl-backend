@@ -3,13 +3,18 @@ import hashlib
 from urllib.parse import urlencode
 from collections import OrderedDict
 import requests
+from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError, ConnectTimeout
 from xml.etree import ElementTree
 
 from logging import getLogger
 
+from urllib3 import Retry
+from urllib3.exceptions import MaxRetryError
+
 logger = getLogger()
 
+BBB_CONNECTION_TIMEOUT = 3
 RET_CODE_FAILED = 'FAILED'
 RET_CODE_SUCCESS = 'SUCCESS'
 API_URL_TEMPLATE = 'https://{hostname}/bigbluebutton/api/{method}'
@@ -19,11 +24,15 @@ def apibool(boolean): return {True: 'true', False: 'false'}[boolean]
 
 
 class BBBRequestFailed(Exception):
-    pass
+    "Generic BBB request failure."
 
 
 class RoomAlreadyExistsError(BBBRequestFailed):
-    pass
+    """Raised when attempting to create room that already exists."""
+
+
+class BBBServerUnreachable(BBBRequestFailed):
+    """Raised when connection to server is not possible."""
 
 
 BBBRoom = collections.namedtuple('BBBRoom',
@@ -53,6 +62,18 @@ class BigBlueButtonAPI:
         self.hostname = hostname
         self.api_secret = api_secret
 
+        # Init cli with retry strategy
+        retry_strategy = Retry(
+            total=3,
+            backoff_factor=0,
+            status_forcelist=[429, 500, 502, 503, 504],
+            method_whitelist=["HEAD", "GET", "OPTIONS"]
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        http = requests.Session()
+        http.mount("https://", adapter)
+        http.mount("http://", adapter)
+        self.http = http
 
     def _build_url(self, method, **qs_params):
         base_url = API_URL_TEMPLATE.format(
@@ -68,7 +89,11 @@ class BigBlueButtonAPI:
         full_url = self._build_url(method, **qs_params)
 
         logger.info(f'Calling BBB API GET {full_url}')
-        resp = requests.get(full_url, timeout=15)
+        try:
+            resp = self.http.get(full_url, timeout=BBB_CONNECTION_TIMEOUT)
+        except (ConnectTimeout, ConnectionError, MaxRetryError) as e:
+            raise BBBServerUnreachable(f'BBB Server unreachable for request {full_url} ({e})')
+
         logger.debug(f'Received: {resp.status_code} {resp.content}')
 
         if resp.status_code != 200:
@@ -107,7 +132,7 @@ class BigBlueButtonAPI:
         """Validate can establish connection with server."""
         try:
             self.get_meetings()
-        except (ConnectionError, ConnectTimeout, BBBRequestFailed):
+        except BBBRequestFailed:
             return False
 
         return True
