@@ -90,7 +90,7 @@ class BigBlueButtonAPI:
 
         logger.info(f'Calling BBB API GET {full_url}')
         try:
-            resp = requests.get(full_url, timeout=BBB_CONNECTION_TIMEOUT)
+            resp = self.http.get(full_url, timeout=BBB_CONNECTION_TIMEOUT)
         except (ConnectTimeout, ConnectionError, MaxRetryError) as e:
             raise BBBServerUnreachable(f'BBB Server unreachable for request {full_url} ({e})')
 

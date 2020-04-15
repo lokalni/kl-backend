@@ -32,6 +32,9 @@ class ServerNode(models.Model):
     class Meta:
         db_table = 'server_nodes'
 
+    def __repr__(self):
+        return f'<{self.__class__.__name__}: id[{self.id}] hostname[{self.hostname}]>'
+
     @classmethod
     def assign_server(cls, group):
         """Choose best server to host lesson for given group."""
