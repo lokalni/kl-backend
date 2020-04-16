@@ -30,7 +30,7 @@ class ServerNodeRegisterRequestSerializer(serializers.Serializer):
 
 
 class ServerNodeHeartBeatRequestSerializer(serializers.Serializer):
-    cpu_count = serializers.IntegerField(min_value=0, max_value=32)
+    cpu_count = serializers.IntegerField(min_value=0, max_value=256)
     load_5m = serializers.DecimalField(min_value=0, decimal_places=2, max_digits=6)
     api_secret = serializers.CharField(max_length=64)  # here_goes_bbb_api_secret
     hostname = HostnameField()
