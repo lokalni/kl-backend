@@ -26,6 +26,10 @@ def apibool(boolean): return {True: 'true', False: 'false'}[boolean]
 class BBBRequestFailed(Exception):
     "Generic BBB request failure."
 
+    def __init__(self, *args, **kwargs):
+        self.hostname = kwargs.pop('hostname')
+        super(BBBRequestFailed, self).__init__(*args, **kwargs)
+
 
 class RoomAlreadyExistsError(BBBRequestFailed):
     """Raised when attempting to create room that already exists."""
@@ -75,6 +79,9 @@ class BigBlueButtonAPI:
         http.mount("http://", adapter)
         self.http = http
 
+    def _raise(self, exc_class, msg=None):
+        raise exc_class(msg, hostname=self.hostname)
+
     def _build_url(self, method, **qs_params):
         base_url = API_URL_TEMPLATE.format(
             hostname=self.hostname,
@@ -92,12 +99,12 @@ class BigBlueButtonAPI:
         try:
             resp = self.http.get(full_url, timeout=BBB_CONNECTION_TIMEOUT)
         except (ConnectTimeout, ConnectionError, MaxRetryError) as e:
-            raise BBBServerUnreachable(f'BBB Server unreachable for request {full_url} ({e})')
+            self._raise(BBBServerUnreachable, f'BBB Server unreachable for request {full_url} ({e})')
 
         logger.debug(f'Received: {resp.status_code} {resp.content}')
 
         if resp.status_code != 200:
-            raise BBBRequestFailed(f'Invalid response status: {resp.status_code}')
+            self._raise(BBBRequestFailed, f'Invalid response status: {resp.status_code}')
 
         return ElementTree.fromstring(resp.content)
 
@@ -109,7 +116,7 @@ class BigBlueButtonAPI:
     def _assert_resp_success(self, xml_resp):
         if xml_resp.find('returncode').text != RET_CODE_SUCCESS:
             resp_content = ElementTree.tostring(xml_resp)
-            raise BBBRequestFailed(f'Request failed: {resp_content}')
+            self._raise(BBBRequestFailed, f'Request failed: {resp_content}')
 
     def get_meetings(self):
         """
@@ -189,7 +196,7 @@ class BigBlueButtonAPI:
             'guestPolicy': guestPolicy,  # ALWAYS_ACCEPT, ALWAYS_DENY
         })
         if xml_resp.find('messageKey').text == 'idNotUnique':
-            raise RoomAlreadyExistsError
+            self._raise(RoomAlreadyExistsError)
         self._assert_resp_success(xml_resp)
 
         return BBBRoom(**{child.tag: child.text for child in xml_resp})

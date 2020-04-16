@@ -1,7 +1,7 @@
 <template>
     <form @submit="studentSubmitted">
       <div class="form-row">
-        <div class="col-4">
+        <div class="col-6">
           <input v-model="name" type="text" class="form-control" placeholder="Imię/Nazwisko lub Klasa/Numer">
         </div>
         <div class="col-auto">
