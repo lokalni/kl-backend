@@ -20,13 +20,13 @@ class TestServerNodeTest(TestCase):
 
     def test_server_assignment_no_servers(self):
         g = mommy.make('kl_participants.Group')
-        self.assertIsNone(ServerNode.assign_server(g))
+        self.assertRaises(ServerNode.DoesNotExist, ServerNode.assign_server, g)
 
     @freeze_time('2020-01-15 00:00:00')
     def test_excludes_dead_servers(self):
         serv1 = self._make_server(last_heartbeat=now() - timedelta(seconds=301))
         g = mommy.make('kl_participants.Group', region=self.region)
-        self.assertIsNone(ServerNode.assign_server(g))
+        self.assertRaises(ServerNode.DoesNotExist, ServerNode.assign_server, g)
 
     @freeze_time('2020-01-15 00:00:00')
     def test_server_assignemnt_same_region_pref(self):
