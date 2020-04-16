@@ -18,8 +18,8 @@ def start_lesson(group, moderator):
         try:
             return _start_lesson(group, moderator)
         except BBBServerUnreachable as e:
-            logger.exception(f'BBB Server unreachable, disconnecting from pool.')
             server = ServerNode.objects.get(hostname=e.hostname)
+            logger.error(f'BBB Server {server.hostname} unreachable, disconnecting from pool.')
             server.disconnect_from_pool()
 
     raise ServerNode.DoesNotExist
@@ -73,4 +73,5 @@ def _start_lesson(group, moderator):
         # join_as=moderator.display_name,
         assing_user_id=moderator.uuid,
     )
+    logger.debug(f'Mod {moderator.id} start_lesson room {room.id} for {group.display_name}@{server.hostname}')
     return redirect_url
