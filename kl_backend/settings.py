@@ -57,6 +57,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'kl_backend.middleware.BounceBotsUA',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -181,3 +182,8 @@ if DJ_SENTRY_DSN: # config should be loaded only for production when DJ_SENTRY_D
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True
     )
+    
+    
+BOUNCE_BOTS_UA_PATTERNS = [
+    ('facebookexternalhit', 'Fix yourself Librus'),
+]
