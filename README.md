@@ -10,6 +10,7 @@ Browsable interface allows for listing groups and managing students in a given g
 
 Moderator might use following features:
 - Login using username and password or by using quick login url like http://localhost:8080/l/NAU1
+- Login & quick access given group with http://localhost:8080/l/NAU1?g=group-1
 - Create or delete group
   Add or delete student within a group
 - Reset student personal access link in case it's lost or disclosed

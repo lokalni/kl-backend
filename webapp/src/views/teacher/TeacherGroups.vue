@@ -24,11 +24,12 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex';
+  import {ROUTE_NAMES} from "@/router";
   import {Groups} from '@/api';
   import GroupList from '@/components/GroupList.vue';
-  import {ROUTE_NAMES} from "../../router";
   import Navbar from '@/components/Navbar.vue';
-  import AddGroupForm from "../../components/AddGroupForm";
+  import AddGroupForm from "@/components/AddGroupForm";
 
   export default {
     name: 'app',
@@ -44,13 +45,19 @@
       };
     },
     computed: {
+      ...mapState(['user']),
     },
     async mounted() {
-      this.groups = await Groups.list();
+      await this.loadGroups();
     },
     methods: {
       async loadGroups() {
-        this.groups = await Groups.list();
+        const groups = await Groups.list();
+        const baseUrl = this.user.moderator.access_url;
+        this.groups = groups.map(g => ({
+          ...g,
+          quick_access_url: `${baseUrl}?g=${g.slug}`,
+        }));
       },
       openGroupView(group) {
         this.$router.push({

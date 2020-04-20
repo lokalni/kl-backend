@@ -2,9 +2,13 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 
+from kl_participants.serializers.moderator_serializer import ModeratorSerializer
+
+
 class UserSerializer(serializers.ModelSerializer):
-    moderator_id = serializers.IntegerField(read_only=True, source='moderator_set.last.id')
+    moderator = ModeratorSerializer()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'is_staff', 'moderator_id']
+        fields = ['id', 'username', 'email', 'is_staff', 'moderator']
+        depth = 1
