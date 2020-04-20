@@ -1,15 +1,17 @@
+import logging
+
 from django.http import HttpResponseRedirect
 from django.conf import settings
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from kl_conferences.bbb_api import BigBlueButtonAPI
 from kl_conferences.models.room import Room
 from kl_conferences.serializers.room_serializer import RoomSerializer
 from kl_participants.models import Student
+
+
+logger = logging.getLogger()
 
 
 def limbo_url(token):
@@ -22,12 +24,19 @@ class RoomViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='join/(?P<token>[^/]+)/?', permission_classes=[])
     def join(self, request, token):
-        token = token.upper()
-        student = get_object_or_404(Student, access_token=token)
+        # Invalid token
+        try:
+            student = Student.objects.get(access_token__iexact=token)
+        except Student.DoesNotExist:
+            logger.warning(f"Token {token} has no associated student.")
+            return HttpResponseRedirect(redirect_to=limbo_url(token))
+
+        # lesson does not exist
         lesson = Room.objects.filter(group=student.group).last()
         if not lesson:
             return HttpResponseRedirect(redirect_to=limbo_url(token))
 
+        # lesson not in progress
         bbb_api = BigBlueButtonAPI(lesson.server_node.hostname, lesson.server_node.api_secret)
         if not bbb_api.is_meeting_running(lesson.bbb_meeting_id):
             # TODO - soft delete?
