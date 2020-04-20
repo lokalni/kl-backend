@@ -47,8 +47,8 @@ App implements algorithm for selecting optimal server and balance load.
 
 ### Students Active Lesson Routing
 
-Students using their quick access link will land on the latest active room for their group.
-Access to a conference room is active only if a room (conference) was previously created by the a Moderator.
+Students using their quick access link will land on a latest active room for their group.
+Access to a conference room is active only if a room (conference) was previously created by a Moderator.
 
 When a Student uses his personal link and his group does not have active, he/she will be dropped into the limbo, waiting for room to open.
 
@@ -72,4 +72,7 @@ Backend is written in Django+DRF
 - Webpack dev server is available at localhost:8080.
 Webapp is written in vue.js 
 
+
+### Sampel Data
+You can use Makefile command ```reset_db``` to populate sample data into database. Consult Makefile for other useful commands.
 
