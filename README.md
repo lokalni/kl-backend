@@ -6,14 +6,14 @@ Teleklasa system provides scalable and simple solution for e-learning.
 
 ### Moderator users
 
-Browsable interface allows for listing groups and manage students in a given group.
+Browsable interface allows for listing groups and managing students in a given group.
 
 Moderator might use following features:
 - Login using username and password or by using quick login url like http://localhost:8080/l/NAU1
 - Create or delete group
   Add or delete student within a group
 - Reset student personal access link in case it's lost or disclosed
-- Create and join new lesson. Starting new lesson will create new BBB room and allow all students assigned 
+- Create and join new lesson. Starting new lesson will allocate new BBB room and allow all students assigned 
 to a group to join active room using their personal links. 
 
 
@@ -30,7 +30,14 @@ http://localhost:8080/UCZEN1
 Admin users manage moderators access, their able to create/revoke/reset access for moderators.
 
 
-## Important concepts
+## Important Concepts
+
+### Creating Groups
+
+Ideally, Student needs only one access url. When creating your class, consider following structure:
+- Group represents entity within school / course, grouping students
+- Same Entity / Group might have lessons with different teachers and always use the same access url
+- **It's best to think about Group as group of people, i.e. "grade 6A" not subject, i.e. "chemistry"**
 
 
 ### Conference Server Allocation
