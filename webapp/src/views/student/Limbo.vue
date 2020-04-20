@@ -4,6 +4,7 @@
           <div class="col-md-12 my-3">
               <h2>Twoje lekcje jeszcze się nie rozpoczęły</h2>
               <h4>Zostań na tej stronie i poczekaj na nauczyciela - nie musisz jej odświeżać.</h4>
+              <small>Jeśli jednak wiesz, że lekcje rozpoczęły się a nadal widzisz ten komunikat to poproś nauczyciela o nowy link.</small>
           </div>
         </div>
     </div>
