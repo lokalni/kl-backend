@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils.text import slugify
 from rest_framework import serializers
 
 from kl_participants.models import Group, Student, Moderator
@@ -16,7 +17,15 @@ class DelimitedStringsListField(serializers.CharField):
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    slug = serializers.SerializerMethodField(read_only=True)
     students_count = serializers.IntegerField(source='student_set.count', read_only=True)
+
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+    def get_slug(self, instance):
+        return '{}-{}'.format(slugify(instance.display_name), str(instance.id))
 
     @transaction.atomic()
     def create(self, validated_data):
@@ -24,10 +33,6 @@ class GroupSerializer(serializers.ModelSerializer):
         new_group = super(GroupSerializer, self).create(validated_data)
         current_user_mod.groups.add(new_group)
         return new_group
-
-    class Meta:
-        model = Group
-        fields = '__all__'
 
 
 class CreateGroupFullRequestSerializer(serializers.ModelSerializer):
