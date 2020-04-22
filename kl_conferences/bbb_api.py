@@ -145,7 +145,7 @@ class BigBlueButtonAPI:
         return True
 
     def create_room(self, meeting_id: str, attendee_secret: str, moderator_secret: str,
-                    max_participants: int = 50, guestPolicy: str = 'ALWAYS_ACCEPT', webcam_mod_only: bool = True):
+                    max_participants: int = 100, guestPolicy: str = 'ALWAYS_ACCEPT', webcam_mod_only: bool = True):
         """
         Creates room in BBB server
         https://docs.bigbluebutton.org/dev/api.html#create
