@@ -124,8 +124,7 @@ def get_student_access_url(token):
 
     # Check: meeeting not running, remove from pool
     if room_details.running != apibool(True):
-        logger.error(f"Meeting {lesson.bbb_meeting_id} is not running, deleting.")
-        lesson.delete()
+        logger.error(f"Meeting {lesson.bbb_meeting_id} is not running.")
         return None
 
     # Check: max sessions for token
