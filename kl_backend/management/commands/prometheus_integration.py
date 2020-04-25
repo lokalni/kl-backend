@@ -10,7 +10,7 @@ class Command(BaseCommand):
         parser.add_argument('prometheus', type=str)
 
     def handle(self, *args, **options):
-        log = logger.getLogger()
+        log = logging.getLogger()
         if ServerNode.objects.exists():
             return
 
