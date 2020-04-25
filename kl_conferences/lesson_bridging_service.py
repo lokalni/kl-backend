@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.utils.timezone import now
 
 from kl_conferences.bbb_api import (
     BigBlueButtonAPI,
@@ -99,21 +100,24 @@ def get_student_access_url(token):
     :param token: Student access token
     :return: redirect url for student or None
     """
-    # Token, student and lesson.
+    # Token & Student
     try:
         student = Student.objects.get(access_token__iexact=token)
-        lesson = Room.objects.filter(group=student.group).latest('id')
+        student.last_accessed = now()
+        student.save()
     except Student.DoesNotExist:
         logger.warning(f"Token {token} has no associated student.")
         return None
+
+    # Get meeting details
+    try:
+        lesson = Room.objects.filter(group=student.group).latest('id')
+
+        bbb_api = BigBlueButtonAPI(lesson.server_node.hostname, lesson.server_node.api_secret)
+        room_details, attendees = bbb_api.get_meeting_info(lesson.bbb_meeting_id)
     except Room.DoesNotExist:
         logger.warning(f"Token {token} has no associated lesson.")
         return None
-
-    # Get meeting details
-    bbb_api = BigBlueButtonAPI(lesson.server_node.hostname, lesson.server_node.api_secret)
-    try:
-        room_details, attendees = bbb_api.get_meeting_info(lesson.bbb_meeting_id)
     except BBBRequestFailed as e:
         logger.error(f"Unable to fetch meeting {lesson.bbb_meeting_id} info: {e}")
         return None
