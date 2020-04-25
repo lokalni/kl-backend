@@ -54,6 +54,10 @@ def _get_or_create_room(group):
         if api.is_meeting_running(room.bbb_meeting_id):
             logger.info(f'Meeting for group {group} already in progress.')
             return room
+        else:
+            # Room leftover, clean it from BBB and let assign new
+            Room.objects.filter(id=room.id).delete()
+            room = None
 
     # Room not found or not active, assign new from refreshed pool
     if not room:
