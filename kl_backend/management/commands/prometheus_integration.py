@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = 'Update server nodes in relation to prometheus alerts'
 
     def add_arguments(self, parser):
-        parser.add_argument('prometheus', type=str, help='Prometheus host', required=True)
+        parser.add_argument('prometheus', type=str)
 
     def handle(self, *args, **options):
         log = logger.getLogger()
