@@ -5,7 +5,7 @@
           <th scope="col">#</th>
           <th scope="col">Nazwa</th>
           <th scope="col">Link dostępowy</th>
-          <th scope="col">Kliknięty</th>
+          <th scope="col">Ostatnie użycie</th>
           <th scope="col">Akcja</th>
         </tr>
       </thead>
