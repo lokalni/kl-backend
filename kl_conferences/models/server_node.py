@@ -32,7 +32,7 @@ class ServerNode(models.Model):
         def active(self):
             """Available for assignments."""
             return self.get_queryset().filter(
-                last_heartbeat__gt=now() - timedelta(seconds=settings.SN_MAX_HEARTBEAT_DELAY),
+                last_heartbeat__gt=now() - timedelta(seconds=settings.MAX_HEARTBEAT_DELAY),
                 load_5m__isnull=False,
                 enabled=True,
             )
