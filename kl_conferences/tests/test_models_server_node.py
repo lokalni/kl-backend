@@ -29,6 +29,12 @@ class TestServerNodeTest(TestCase):
         self.assertRaises(ServerNode.DoesNotExist, ServerNode.assign_server, g)
 
     @freeze_time('2020-01-15 00:00:00')
+    def test_server_assignemnt_disabled_server(self):
+        serv1 = self._make_server(last_heartbeat=now() - timedelta(seconds=100), enabled=False)
+        g = mommy.make('kl_participants.Group', region=self.region)
+        self.assertRaises(ServerNode.DoesNotExist, ServerNode.assign_server, g)
+
+    @freeze_time('2020-01-15 00:00:00')
     def test_server_assignemnt_same_region_pref(self):
         serv_local = self._make_server(last_heartbeat=now() - timedelta(seconds=100))
         serv_other = self._make_server(last_heartbeat=now() - timedelta(seconds=100), region='other')

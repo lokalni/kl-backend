@@ -14,6 +14,7 @@ import os
 import environ
 import sentry_sdk
 
+from decimal import Decimal as D
 from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env()
@@ -167,6 +168,10 @@ REST_FRAMEWORK = {
 
 
 BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')
+
+# Server Nodes settings
+SN_MAX_HEARTBEAT_DELAY = 5 * 60  # seconds
+SN_MAX_SAME_REGION_LOAD_PER_CPU = D('0.82137')
 
 # Sentry.io
 
