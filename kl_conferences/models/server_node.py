@@ -19,15 +19,25 @@ class ServerNode(models.Model):
     display_name = models.CharField(max_length=255, unique=True)
     hostname = models.CharField(max_length=1024, unique=True)
     api_secret = models.CharField(max_length=64)
-    # Metrics delivered with heartbeat, all null at creation
+    enabled = models.BooleanField(default=True)
     region = models.CharField(choices=Region.choices(), max_length=32, null=True)  # TODO - move to table or convert to int ids
     cpu_count = models.SmallIntegerField(null=True)
     load_5m = models.DecimalField(decimal_places=2, max_digits=6, null=True)
     last_heartbeat = models.DateTimeField(null=True)
     last_assigned = models.DateTimeField(null=True)
 
-    MAX_HEARTBEAT_DELAY = 5 * 60  # seconds
-    MAX_SAME_REGION_LOAD_PER_CPU = D('0.82137')
+    class ServerNodeManager(models.Manager):
+
+        @property
+        def active(self):
+            """Available for assignments."""
+            return self.get_queryset().filter(
+                last_heartbeat__gt=now() - timedelta(seconds=settings.SN_MAX_HEARTBEAT_DELAY),
+                load_5m__isnull=False,
+                enabled=True,
+            )
+
+    objects = ServerNodeManager()
 
     class Meta:
         db_table = 'server_nodes'
@@ -38,20 +48,25 @@ class ServerNode(models.Model):
     @classmethod
     def assign_server(cls, group):
         """Choose best server to host lesson for given group."""
-        node_candidates = cls.objects.filter(
-            last_heartbeat__gt=now() - timedelta(seconds=cls.MAX_HEARTBEAT_DELAY),
-            load_5m__isnull=False,
-        ).annotate(load_per_cpu=ExpressionWrapper(F('load_5m')/F('cpu_count'), output_field=DecimalField()))
+        max_delay = settings.SN_MAX_HEARTBEAT_DELAY
+        max_load = settings.SN_MAX_SAME_REGION_LOAD_PER_CPU
+
+        node_candidates = cls.objects.active.annotate(
+            load_per_cpu=ExpressionWrapper(
+                F('load_5m')/F('cpu_count'),
+                output_field=DecimalField()
+            )
+        )
         same_region_low_load = node_candidates.filter(
             region=group.region,
-            load_per_cpu__lt=cls.MAX_SAME_REGION_LOAD_PER_CPU
+            load_per_cpu__lt=max_load,
         )
         if same_region_low_load.exists():
             node_candidates = same_region_low_load
 
         def node_weight(n):
-            last_assigned = n.last_assigned or now() - timedelta(seconds=cls.MAX_HEARTBEAT_DELAY)
-            la_v = D((now() - last_assigned).seconds) / D(cls.MAX_HEARTBEAT_DELAY)
+            last_assigned = n.last_assigned or now() - timedelta(seconds=max_delay)
+            la_v = D((now() - last_assigned).seconds) / D(max_delay)
             la_w = D('0.3')
             cpu_v = n.load_per_cpu
             cpu_w = 1 - la_w
@@ -99,7 +114,7 @@ class ServerNode(models.Model):
             return server_node
 
     def disconnect_from_pool(self):
-        """Marks server as inactive."""
+        """Temporarily disable server until next heartbeat."""
         self.load_5m = None
         self.save()
 
