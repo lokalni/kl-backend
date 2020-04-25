@@ -11,8 +11,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         log = getLogger()
-        if ServerNode.objects.exists():
-            return
 
         # Fetch latest alert list from prometheus
         alerts = requests.get("http://{prometheus_host}:9090/api/v1/alerts".format(
