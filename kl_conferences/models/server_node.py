@@ -48,8 +48,8 @@ class ServerNode(models.Model):
     @classmethod
     def assign_server(cls, group):
         """Choose best server to host lesson for given group."""
-        max_delay = settings.SN_MAX_HEARTBEAT_DELAY
-        max_load = settings.SN_MAX_SAME_REGION_LOAD_PER_CPU
+        max_delay = settings.MAX_HEARTBEAT_DELAY
+        max_load = settings.MAX_SAME_REGION_LOAD_PER_CPU
 
         node_candidates = cls.objects.active.annotate(
             load_per_cpu=ExpressionWrapper(

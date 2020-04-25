@@ -166,14 +166,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-
-BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')
-
-# Server Nodes settings
-SN_MAX_HEARTBEAT_DELAY = 5 * 60  # seconds
-SN_MAX_SAME_REGION_LOAD_PER_CPU = D('0.82137')
-
-# Sentry.io
+# --- Sentry.io
 
 DJ_SENTRY_DSN = env.str('DJ_SENTRY_DSN', None)
 
@@ -186,3 +179,21 @@ if DJ_SENTRY_DSN: # config should be loaded only for production when DJ_SENTRY_D
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True
     )
+
+# --- ACCESS PROTOCOL ---
+# Domain whitelisted for nodes registration
+BBB_DOMAIN_ALLOWED = env.str('DJ_BBB_DOMAIN_ALLOWED', default='.lokalni.pl')
+
+
+# --- CONFERENCE SETTINGS ---
+# Number of servers to try when starting new lesson before failure
+NEW_LESSON_TRY_SERVERS_CNT = env.int('DJ_NEW_LESSON_TRY_SERVERS_CNT', default=2)
+# Number of allowed active student sessions per access token.
+MAX_STUDENT_TOKEN_SESSIONS = env.int('DJ_MAX_STUDENT_TOKEN_SESSIONS', default=2)
+
+
+# --- SERVER NODE SETTINGS ---
+# Servers with last heartbeat older than X seconds are excluded from pool
+MAX_HEARTBEAT_DELAY = env.int('DJ_MAX_STUDENT_TOKEN_SESSIONS', default=5 * 60)
+# How much load is too high to consider same region preferred
+MAX_SAME_REGION_LOAD_PER_CPU = D(env.str('DJ_MAX_STUDENT_TOKEN_SESSIONS', default='0.82137'))

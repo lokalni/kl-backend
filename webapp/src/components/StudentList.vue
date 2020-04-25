@@ -5,6 +5,7 @@
           <th scope="col">#</th>
           <th scope="col">Nazwa</th>
           <th scope="col">Link dostępowy</th>
+          <th scope="col">Kliknięty</th>
           <th scope="col">Akcja</th>
         </tr>
       </thead>
@@ -15,6 +16,7 @@
           <th scope="row">{{idx + 1}}</th>
           <td>{{student.display_name}}</td>
           <td>{{student.access_url}}</td>
+          <td>{{fmtLastAccessed(student.last_accessed)}}</td>
             <button type="button" class="btn btn-primary m-2"
                       @click="$event => actionAccessLink($event, student)"
               >Resetuj Dostęp</button>
@@ -28,6 +30,7 @@
 
 <script>
     import {Students} from "../api";
+    import {fmtTimestamp} from "../utils";
 
     export default {
         name: "StudentList",
@@ -46,6 +49,9 @@
             $event.stopPropagation();
             await Students.delete(student.id);
             this.$emit('updatedStudent', student);
+          },
+          fmtLastAccessed(timestamp) {
+            return fmtTimestamp(timestamp) || 'Nigdy';
           }
         }
     }

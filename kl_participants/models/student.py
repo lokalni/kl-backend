@@ -9,6 +9,7 @@ class Student(models.Model):
     group = models.ForeignKey('kl_participants.Group', on_delete=models.PROTECT)
     display_name = models.CharField(max_length=255)
     access_token = models.CharField(max_length=8, unique=True, default=get_token)
+    last_accessed = models.DateTimeField(null=True)
 
     class Meta:
         db_table = 'students'
@@ -34,4 +35,5 @@ class Student(models.Model):
         return student
 
     def reset_token(self):
-        self.access_token = get_token();
+        self.access_token = get_token()
+        self.last_accessed = None

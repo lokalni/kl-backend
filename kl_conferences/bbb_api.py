@@ -23,9 +23,9 @@ API_URL_TEMPLATE = 'https://{hostname}/bigbluebutton/api/{method}'
 def apibool(boolean): return {True: 'true', False: 'false'}[boolean]
 
 
+# API Exceptions
 class BBBRequestFailed(Exception):
-    "Generic BBB request failure."
-
+    """Generic BBB request failure."""
     def __init__(self, *args, **kwargs):
         self.hostname = kwargs.pop('hostname')
         super(BBBRequestFailed, self).__init__(*args, **kwargs)
@@ -39,11 +39,19 @@ class BBBServerUnreachable(BBBRequestFailed):
     """Raised when connection to server is not possible."""
 
 
-BBBRoom = collections.namedtuple('BBBRoom',
-                                 'meetingID internalMeetingID parentMeetingID attendeePW moderatorPW createTime '
-                                 'voiceBridge dialNumber createDate hasUserJoined duration hasBeenForciblyEnded '
-                                 'returncode messageKey message'
-                                 )
+# Room details
+BBBRoom = collections.namedtuple(
+    'BBBRoom',
+    'meetingID internalMeetingID attendeePW moderatorPW createTime running '
+    'voiceBridge dialNumber createDate hasUserJoined duration hasBeenForciblyEnded ')
+
+# Meeting participant
+BBBAttendee = collections.namedtuple(
+    'BBBAttendee',
+    'userID fullName role isPresenter isListeningOnly hasJoinedVoice hasVideo clientType')
+
+# Contains details above
+BBBMeetingInfo = collections.namedtuple('BBBMeetingInfo', 'room attendees')
 
 
 class BigBlueButtonAPI:
@@ -109,11 +117,13 @@ class BigBlueButtonAPI:
         return ElementTree.fromstring(resp.content)
 
     def _calc_checksum(self, method, querystring):
+        """Checksum for authorizing each request."""
         blob = method + querystring + self.api_secret
         logger.debug(f"Creating checksum from {blob}")
         return hashlib.sha1(blob.encode('utf-8')).hexdigest()
 
     def _assert_resp_success(self, xml_resp):
+        """Check request status and raise if failed."""
         if xml_resp.find('returncode').text != RET_CODE_SUCCESS:
             resp_content = ElementTree.tostring(xml_resp)
             self._raise(BBBRequestFailed, f'Request failed: {resp_content}')
@@ -127,13 +137,40 @@ class BigBlueButtonAPI:
         # TODO - return meetings
         xml_resp = self._get('getMeetings')
         self._assert_resp_success(xml_resp)
+
         return []
 
     def is_meeting_running(self, meeting_id: str):
-        """Check if given meeting is running."""
+        """
+        Check if given meeting is running.
+        :param meeting_id:
+        :return:
+        """
         xml_resp = self._get('isMeetingRunning', meetingID=meeting_id)
         self._assert_resp_success(xml_resp)
-        return xml_resp.find('running').text == 'true'
+
+        return xml_resp.find('running').text == apibool(True)
+
+    def get_meeting_info(self, meeting_id: str):
+        """
+        Get meeting and attendees info.
+        https://docs.bigbluebutton.org/dev/api.html#getmeetinginfo
+        :param meeting_id:
+        :return:
+        """
+        xml_resp = self._get('getMeetingInfo', meetingID=meeting_id)
+        self._assert_resp_success(xml_resp)
+
+        room = BBBRoom(**{
+            child.tag: child.text for child in xml_resp
+            if child.tag in BBBRoom._fields
+        })
+        attendees = [
+            BBBAttendee(**{child.tag: child.text for child in a_data})
+            for a_data in xml_resp.find('attendees')
+        ]
+
+        return BBBMeetingInfo(room=room, attendees=attendees)
 
     def check_connection(self):
         """Validate can establish connection with server."""
@@ -199,10 +236,13 @@ class BigBlueButtonAPI:
             self._raise(RoomAlreadyExistsError)
         self._assert_resp_success(xml_resp)
 
-        return BBBRoom(**{child.tag: child.text for child in xml_resp})
+        room_data = {child.tag: child.text for child in xml_resp if child.tag in BBBRoom._fields}
+        room_data['running'] = apibool(True)
+
+        return BBBRoom(**room_data)
 
     def get_join_url(self, meeting_id: str, password: str, join_as: str, assing_user_id: str,
-             join_via_html5: bool = False, user_is_guest: bool = False):
+                     join_via_html5: bool = False, user_is_guest: bool = False):
         """
         Builds url allowing user to join the meeting.
         When user is redirected to that url he'll automatically join the room.
