@@ -1,20 +1,36 @@
 import logging
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import transaction
 
-from kl_conferences.bbb_api import BigBlueButtonAPI, RoomAlreadyExistsError, BBBServerUnreachable
+from kl_conferences.bbb_api import (
+    BigBlueButtonAPI,
+    BBBServerUnreachable,
+    BBBRequestFailed,
+    RoomAlreadyExistsError,
+    apibool,
+)
 from kl_conferences.models import ServerNode, Room
+from kl_participants.models import Student
 
 
 logger = logging.getLogger()
 
-CHECK_SERVERS_CNT = 2
+
+__all__ = ['start_lesson', 'get_student_access_url']
 
 
 def start_lesson(group, moderator):
-    """Attempt to start a lesson, keep in mind that server might be down."""
-    for _ in range(CHECK_SERVERS_CNT):
+    """
+    Attempt to start a lesson, keep in mind that server might be down.
+
+    :param group:
+    :param moderator:
+    :return: redirect url for mod
+    """
+
+    for _ in range(settings.NEW_LESSON_TRY_SERVERS_CNT):
         try:
             return _start_lesson(group, moderator)
         except BBBServerUnreachable as e:
@@ -25,7 +41,7 @@ def start_lesson(group, moderator):
     raise ServerNode.DoesNotExist
 
 
-def get_or_create_room(group):
+def _get_or_create_room(group):
     """"Returns active room for a group or assigns new one."""
     room = group.last_meeting_room()
 
@@ -48,7 +64,7 @@ def get_or_create_room(group):
 
 @transaction.atomic
 def _start_lesson(group, moderator):
-    room = get_or_create_room(group)
+    room = _get_or_create_room(group)
     server = room.server_node
     api = BigBlueButtonAPI(server.hostname, server.api_secret)
 
@@ -75,3 +91,56 @@ def _start_lesson(group, moderator):
     )
     logger.debug(f'Mod {moderator.id} start_lesson room {room.id} for {group.display_name}@{server.hostname}')
     return redirect_url
+
+
+def get_student_access_url(token):
+    """
+    Get access url for student, perform checks.
+    :param token: Student access token
+    :return: redirect url for student or None
+    """
+    # Token, student and lesson.
+    try:
+        student = Student.objects.get(access_token__iexact=token)
+        lesson = Room.objects.filter(group=student.group).latest('id')
+    except Student.DoesNotExist:
+        logger.warning(f"Token {token} has no associated student.")
+        return None
+    except Room.DoesNotExist:
+        logger.warning(f"Token {token} has no associated lesson.")
+        return None
+
+    # Get meeting details
+    bbb_api = BigBlueButtonAPI(lesson.server_node.hostname, lesson.server_node.api_secret)
+    try:
+        room_details, attendees = bbb_api.get_meeting_info(lesson.bbb_meeting_id)
+    except BBBRequestFailed as e:
+        logger.error(f"Unable to fetch meeting {lesson.bbb_meeting_id} info: {e}")
+        return None
+
+    # Check: meeeting not running, remove from pool
+    if room_details.running != apibool(True):
+        logger.error(f"Meeting {lesson.bbb_meeting_id} is not running, deleting.")
+        lesson.delete()
+        return None
+
+    # Check: max sessions for token
+    student_sessions = [a.userID for a in attendees].count(student.uuid)
+    if student_sessions >= settings.MAX_STUDENT_TOKEN_SESSIONS:
+        logger.warning(
+            f"Student {student.uuid} token {token} has max number of active sessions.")
+        return None
+
+    try:
+        return bbb_api.get_join_url(
+            meeting_id=lesson.bbb_meeting_id,
+            password=lesson.attendee_secret,
+            join_as=student.display_name,
+            assing_user_id=student.uuid,
+        )
+    except BBBRequestFailed as e:
+        logger.error(f"Unable to fetch redirect url {lesson.bbb_meeting_id}: {e}")
+        return None
+
+
+
