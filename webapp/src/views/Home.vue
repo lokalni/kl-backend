@@ -2,7 +2,7 @@
   <div class="home">
     <Navbar/>
     <img alt="Vue logo" src="../assets/logo.png">
-    <InfoMain v-if='user' msg="Witaj w Teleklasie"/>
+    <InfoMain v-if='user' msg="Witaj w TeleKlasie"/>
     <Login v-else/>
   </div>
 </template>
