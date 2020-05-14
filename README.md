@@ -1,6 +1,6 @@
 # Overview
 
-Teleklasa system provides scalable and simple solution for e-learning.
+TeleKlasa system provides scalable and simple solution for e-learning.
 
 ## System Users And Features
 
