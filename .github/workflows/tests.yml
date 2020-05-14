@@ -28,5 +28,7 @@ jobs:
     - name: Run Tests
       env:
         DJ_DOMAIN: http://localhost:8080
+        DJ_SECRET_KEY: jakisklucz
+        DJ_DATABASES_DEFAULT_URL: postgresql://kl-database/main?user=db-user&password=db-pass  
       run: |
         python manage.py test
