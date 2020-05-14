@@ -1,8 +1,5 @@
 name: Django CI
 
-env:
-  DJ_DOMAIN: http://localhost:8080 
-
 on:
   push:
     branches: [ master ]
@@ -29,5 +26,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
+      env:
+        DJ_DOMAIN: http://localhost:8080
       run: |
         python manage.py test
