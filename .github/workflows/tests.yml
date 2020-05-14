@@ -32,6 +32,6 @@ jobs:
         DJ_DATABASES_DEFAULT_URL: postgresql://kl-database/main?user=db-user&password=db-pass
         DJ_DEBUG: True
         DJ_ALLOWED_HOSTS: localhost,127.0.0.1,kl-backend
-        DJ_CORS_ORIGIN_WHITELIST: *
+        DJ_CORS_ORIGIN_WHITELIST: '*'
       run: |
         python manage.py test
