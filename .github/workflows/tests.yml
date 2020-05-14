@@ -24,13 +24,14 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      env:
+      - env:
         DJ_DOMAIN: http://localhost:8080
         DJ_SECRET_KEY: jakisklucz
         DJ_DATABASES_DEFAULT_URL: postgresql://localhost/main?user=db-user&password=db-pass
         DJ_DEBUG: True
         DJ_ALLOWED_HOSTS: localhost,127.0.0.1,kl-backend
         DJ_CORS_ORIGIN_WHITELIST: '*'
+
       - uses: actions/checkout@v2
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
