@@ -1,5 +1,8 @@
 name: Django CI
 
+env:
+  DJ_DOMAIN: http://localhost:8080 
+
 on:
   push:
     branches: [ master ]
