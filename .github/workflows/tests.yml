@@ -43,6 +43,7 @@ jobs:
           DJ_CORS_ORIGIN_WHITELIST: '*'
         run: 
           python manage.py migrate
+          python manage.py dbseed
       - name: Run Tests
         env:
           DJ_DOMAIN: http://localhost:8080
