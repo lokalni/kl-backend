@@ -115,7 +115,7 @@ class ServerNode(models.Model):
 
     def disconnect_from_pool(self):
         """Temporarily disable server until next heartbeat."""
-        self.load_5m = None
+        self.enabled = False
         self.save()
 
 
