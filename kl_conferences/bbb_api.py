@@ -4,17 +4,15 @@ from urllib.parse import urlencode
 from collections import OrderedDict
 import requests
 from requests.adapters import HTTPAdapter
-from requests.exceptions import ConnectionError, ConnectTimeout
 from xml.etree import ElementTree
 
 from logging import getLogger
 
 from urllib3 import Retry
-from urllib3.exceptions import MaxRetryError
 
 logger = getLogger()
 
-BBB_CONNECTION_TIMEOUT = 3
+BBB_CONNECTION_TIMEOUT = 2
 RET_CODE_FAILED = 'FAILED'
 RET_CODE_SUCCESS = 'SUCCESS'
 API_URL_TEMPLATE = 'https://{hostname}/bigbluebutton/api/{method}'
@@ -106,7 +104,7 @@ class BigBlueButtonAPI:
         logger.info(f'Calling BBB API GET {full_url}')
         try:
             resp = self.http.get(full_url, timeout=BBB_CONNECTION_TIMEOUT)
-        except (ConnectTimeout, ConnectionError, MaxRetryError) as e:
+        except Exception as e:
             self._raise(BBBServerUnreachable, f'BBB Server unreachable for request {full_url} ({e})')
 
         logger.debug(f'Received: {resp.status_code} {resp.content}')
@@ -146,8 +144,11 @@ class BigBlueButtonAPI:
         :param meeting_id:
         :return:
         """
-        xml_resp = self._get('isMeetingRunning', meetingID=meeting_id)
-        self._assert_resp_success(xml_resp)
+        try:
+            xml_resp = self._get('isMeetingRunning', meetingID=meeting_id)
+            self._assert_resp_success(xml_resp)
+        except BBBRequestFailed:
+            return False
 
         return xml_resp.find('running').text == apibool(True)
 
