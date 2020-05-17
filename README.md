@@ -1,6 +1,6 @@
 # Overview
 
-TeleKlasa system provides scalable and simple solution for e-learning.
+TeleKlasa system provides scalable and simple solution for e-learning. 
 
 ## System Users And Features
 
@@ -71,9 +71,9 @@ Open `http://localhost:8000/admin`, log in with admin/admin credentials.
 Backend is written in Django+DRF
 
 - Webpack dev server is available at localhost:8080.
-Webapp is written in vue.js 
+Web App is written in vue.js 
 
 
-### Sampel Data
+### Sample Data
 You can use Makefile command ```reset_db``` to populate sample data into database. Consult Makefile for other useful commands.
 
