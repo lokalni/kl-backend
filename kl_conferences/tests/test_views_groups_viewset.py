@@ -63,5 +63,5 @@ class TestGroupsViewSet(TestCase):
         # Check servers status updated
         server_1.refresh_from_db()
         server_2.refresh_from_db()
-        self.assertEquals(server_1.load_5m, None)
-        self.assertNotEqual(server_2.load_5m, None)
+        self.assertFalse(server_1.enabled)
+        self.assertTrue(server_2.enabled)
