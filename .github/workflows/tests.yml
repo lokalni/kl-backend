@@ -1,0 +1,65 @@
+name: TeleKlasa automated tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:12.2
+        env:
+          POSTGRES_USER: db-user
+          POSTGRES_PASSWORD: db-pass
+          POSTGRES_DB: main
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run migrations
+        env:
+          DJ_DOMAIN: http://localhost:8080
+          DJ_SECRET_KEY: jakisklucz
+          DJ_DATABASES_DEFAULT_URL: postgresql://localhost/main?user=db-user&password=db-pass
+          DJ_DEBUG: True
+          DJ_ALLOWED_HOSTS: localhost,127.0.0.1,kl-backend
+          DJ_CORS_ORIGIN_WHITELIST: '*'
+        run: 
+          python manage.py migrate
+      - name: Run dbseed
+        env:
+          DJ_DOMAIN: http://localhost:8080
+          DJ_SECRET_KEY: jakisklucz
+          DJ_DATABASES_DEFAULT_URL: postgresql://localhost/main?user=db-user&password=db-pass
+          DJ_DEBUG: True
+          DJ_ALLOWED_HOSTS: localhost,127.0.0.1,kl-backend
+          DJ_CORS_ORIGIN_WHITELIST: '*'        
+        run:
+          python manage.py dbseed
+      - name: Run Tests
+        env:
+          DJ_DOMAIN: http://localhost:8080
+          DJ_SECRET_KEY: jakisklucz
+          DJ_DATABASES_DEFAULT_URL: postgresql://localhost/main?user=db-user&password=db-pass
+          DJ_DEBUG: True
+          DJ_ALLOWED_HOSTS: localhost,127.0.0.1,kl-backend
+          DJ_CORS_ORIGIN_WHITELIST: '*'
+        run: 
+          python manage.py test
