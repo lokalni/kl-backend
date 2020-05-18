@@ -56,6 +56,7 @@ def _get_or_create_room(group):
             return room
         else:
             # Room leftover, clean it from BBB and let assign new
+            logger.info(f'Cleaning leftover room for group {group}')
             Room.objects.filter(id=room.id).delete()
             room = None
 
