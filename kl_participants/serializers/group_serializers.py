@@ -2,6 +2,7 @@ from django.db import transaction
 from django.utils.text import slugify
 from rest_framework import serializers
 
+from kl_conferences.serializers.server_node_serializer import ServerNodeSerializer
 from kl_participants.models import Group, Student, Moderator
 
 
@@ -19,6 +20,7 @@ class DelimitedStringsListField(serializers.CharField):
 class GroupSerializer(serializers.ModelSerializer):
     slug = serializers.SerializerMethodField(read_only=True)
     students_count = serializers.IntegerField(source='student_set.count', read_only=True)
+    preferred_servers = ServerNodeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Group
