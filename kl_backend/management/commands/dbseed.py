@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
+from django.utils.timezone import now, timedelta
 from model_mommy import mommy
 
 from kl_conferences.models import ServerNode, PreferredServer
@@ -20,10 +21,14 @@ class Command(BaseCommand):
         adm_user = User.objects.create_superuser('admin', 'admin@admin.admin', 'admin')
         adm_mod = mommy.make(Moderator, user=adm_user, display_name='Admin', access_token='ADMIN')
 
-        s1 = ServerNode.objects.create(display_name='Serwer 1', hostname='abcdef.com')
-        s2 = ServerNode.objects.create(display_name='Serwer 2', hostname='ghijkl.com')
-        s4 = ServerNode.objects.create(display_name='Serwer 3', hostname='mnopqr.com')
-        s5 = ServerNode.objects.create(display_name='Serwer 4', hostname='stuvwx.com')
+        s1 = ServerNode.objects.create(
+            enabled=True, region="malopolska", display_name='Serwer 1', hostname='abcdef.com', last_heartbeat=now())
+        s2 = ServerNode.objects.create(
+            enabled=True, region="podkarpackie", display_name='Serwer 2', hostname='ghijkl.com', last_heartbeat=now() - timedelta(seconds=100))
+        s4 = ServerNode.objects.create(
+            enabled=True, region="lubelskie", display_name='Serwer 3', hostname='mnopqr.com', last_heartbeat=now() - timedelta(seconds=150))
+        s5 = ServerNode.objects.create(
+            enabled=False, region="malopolska", display_name='Serwer 4', hostname='stuvwx.com', last_heartbeat=now() - timedelta(seconds=250))
 
         # Add class groups
         g1 = Group.objects.create(display_name='klasa 3A szkola 1')
@@ -31,11 +36,11 @@ class Command(BaseCommand):
         g3 = Group.objects.create(display_name='klasa 1B szkola 2')
 
         # Define preferred servers
-        PreferredServer.objects.create(group=g2, server=s1)
-        PreferredServer.objects.create(group=g2, server=s2)
+        PreferredServer.objects.create(group=g2, server=s1, priority=2)
+        PreferredServer.objects.create(group=g2, server=s2, priority=1)
 
-        PreferredServer.objects.create(group=g3, server=s2)
-        PreferredServer.objects.create(group=g3, server=s1)
+        PreferredServer.objects.create(group=g3, server=s2, priority=2)
+        PreferredServer.objects.create(group=g3, server=s1, priority=1)
 
         # Add teachers
         m1 = mommy.make(Moderator, display_name='Nauczyciel grupa 1 i 2', access_token='NAU1')

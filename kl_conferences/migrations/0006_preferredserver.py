@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='kl_participants.Group')),
                 ('server', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='kl_conferences.ServerNode')),
+                ('priority', models.SmallIntegerField()),
             ],
             options={
                 'ordering': ('id',),

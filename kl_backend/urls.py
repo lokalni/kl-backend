@@ -25,12 +25,16 @@ from kl_backend import views as backend_views
 
 
 router = DefaultRouter()
+# App API
 router.register(r'accounts', backend_views.AccountsViewSet, basename='accounts')
 router.register(r'students', participants_views.StudentViewSet, basename='students')
 router.register(r'groups', participants_views.GroupViewSet, basename='groups')
 router.register(r'moderators', participants_views.ModeratorViewSet, basename='moderators')
 router.register(r'rooms', conference_views.RoomViewSet, basename='rooms')
+router.register(r'servers', conference_views.ServerNodeViewSet, basename='servers')
+# Internal server API
 router.register(r'nodes', conference_views.ServerNodeSelfServiceViewSet, basename='nodes')
+
 urlpatterns = router.urls
 
 root_urlpatterns = [

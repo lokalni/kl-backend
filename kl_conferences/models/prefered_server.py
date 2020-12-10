@@ -7,6 +7,7 @@ class PreferredServer(models.Model):
     """
     server = models.ForeignKey('kl_conferences.ServerNode', on_delete=models.CASCADE)
     group = models.ForeignKey('kl_participants.Group', on_delete=models.CASCADE)
+    priority = models.SmallIntegerField()
 
     class Meta:
         unique_together = ('server', 'group')

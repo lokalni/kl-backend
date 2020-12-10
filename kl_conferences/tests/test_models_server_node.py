@@ -53,7 +53,7 @@ class TestServerNodeTest(TestCase):
         serv_local = self._make_server(last_heartbeat=now() - timedelta(seconds=100))
         serv_other_region_pref = self._make_server(last_heartbeat=now() - timedelta(seconds=100), region='other')
         g = mommy.make('kl_participants.Group', region=self.region)
-        PreferredServer.objects.create(group=g, server=serv_other_region_pref)
+        PreferredServer.objects.create(group=g, server=serv_other_region_pref, priority=1)
         self.assertEquals(ServerNode.assign_server(g), serv_other_region_pref)
 
     @freeze_time('2020-01-15 00:00:00')
@@ -61,8 +61,8 @@ class TestServerNodeTest(TestCase):
         serv_assigned_last = self._make_server(last_heartbeat=now() - timedelta(seconds=100))
         serv_assigned_first = self._make_server(last_heartbeat=now() - timedelta(seconds=100))
         g = mommy.make('kl_participants.Group', region=self.region)
-        PreferredServer.objects.create(group=g, server=serv_assigned_first)
-        PreferredServer.objects.create(group=g, server=serv_assigned_last)
+        PreferredServer.objects.create(group=g, server=serv_assigned_first, priority=2)
+        PreferredServer.objects.create(group=g, server=serv_assigned_last, priority=1)
         self.assertEquals(ServerNode.assign_server(g), serv_assigned_first)
 
     @freeze_time('2020-01-15 00:00:00')
@@ -70,5 +70,5 @@ class TestServerNodeTest(TestCase):
         serv_other = self._make_server(display_name='dupa2', last_heartbeat=now() - timedelta(seconds=100), region='other', load_5m=1)
         serv_pref_high_load = self._make_server(display_name='dupa', last_heartbeat=now() - timedelta(seconds=100), load_5m=1.90)
         g = mommy.make('kl_participants.Group', region=self.region)
-        PreferredServer.objects.create(group=g, server=serv_pref_high_load)
+        PreferredServer.objects.create(group=g, server=serv_pref_high_load, priority=1)
         self.assertEquals(ServerNode.assign_server(g), serv_other)
