@@ -2,16 +2,19 @@
     <table class="table table-striped table-hover">
         <thead>
         <tr>
+            <th scope="col">Nazwa</th>
             <th scope="col">Domena</th>
             <th scope="col">Region</th>
             <th scope="col">Aktywny</th>
             <th scope="col">Aktualizacja</th>
+            <th scope="col">Akcja</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="(server, idx) in servers"
             :key="server.id"
         >
+            <td>{{server.display_name}}</td>
             <td>{{server.hostname}}</td>
             <td>{{server.region}}</td>
             <td>
@@ -36,7 +39,7 @@
                 >
                     <span class="fas fa-chevron-circle-down"/>
                 </button>
-                <button type="button" class="btn btn-danger ml-1"
+                <button type="button" class="btn btn-danger ml-1 float-right"
                         @click="() => removeServer(server)"
                 >Usuń
                 </button>
