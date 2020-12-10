@@ -43,7 +43,7 @@ class GroupSerializer(serializers.ModelSerializer):
     @transaction.atomic()
     def update(self, instance, validated_data):
         updated_group = super(GroupSerializer, self).update(instance, validated_data)
-        self._handle_preferred_servers(updated_group, self.initial_data['preferred_servers'])
+        self._handle_preferred_servers(updated_group, self.initial_data.pop('preferred_servers', []))
         return updated_group
 
     def _handle_preferred_servers(self, group, preferred_servers_list):

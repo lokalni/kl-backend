@@ -10,7 +10,6 @@ from kl_conferences.lesson_bridging_service import start_lesson
 from kl_conferences.models import ServerNode
 from kl_participants.models import Group
 from kl_participants.serializers.group_serializers import GroupSerializer, CreateGroupFullRequestSerializer
-from kl_participants.serializers.group_serializers import GroupSerializer, CreateGroupFullRequestSerializer
 
 
 class GroupViewSet(viewsets.ModelViewSet):

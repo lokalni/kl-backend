@@ -5,12 +5,12 @@ from decimal import Decimal as D
 from django.contrib import admin
 from django.db import models
 from django.db.models import F, ExpressionWrapper, DecimalField
+from django.db.models.functions import Coalesce
 from django.utils.timezone import now
 from django.conf import settings
 
 from kl_backend.regions import Region
 from kl_conferences.bbb_api import BigBlueButtonAPI
-
 
 logger = logging.getLogger()
 
@@ -20,7 +20,8 @@ class ServerNode(models.Model):
     hostname = models.CharField(max_length=1024, unique=True)
     api_secret = models.CharField(max_length=64)
     enabled = models.BooleanField(default=True)
-    region = models.CharField(choices=Region.choices(), max_length=32, null=True)  # TODO - move to table or convert to int ids
+    region = models.CharField(choices=Region.choices(), max_length=32,
+                              null=True)  # TODO - move to table or convert to int ids
     cpu_count = models.SmallIntegerField(null=True)
     load_5m = models.DecimalField(decimal_places=2, max_digits=6, null=True)
     last_heartbeat = models.DateTimeField(null=True)
@@ -53,24 +54,26 @@ class ServerNode(models.Model):
 
         node_candidates = cls.objects.active.annotate(
             load_per_cpu=ExpressionWrapper(
-                F('load_5m')/F('cpu_count'),
+                F('load_5m') / F('cpu_count'),
                 output_field=DecimalField()
-            )
-        )
-        same_region_low_load = node_candidates.filter(
-            region=group.region,
+            ),
+            priority=Coalesce('preferredserver__priority', 0),
+        ).filter(
             load_per_cpu__lt=max_load,
         )
-        if same_region_low_load.exists():
-            node_candidates = same_region_low_load
 
         def node_weight(n):
+            """Evaluates preferred server, region and load"""
             last_assigned = n.last_assigned or now() - timedelta(seconds=max_delay)
             la_v = D((now() - last_assigned).seconds) / D(max_delay)
             la_w = D('0.3')
             cpu_v = n.load_per_cpu
             cpu_w = 1 - la_w
-            return la_v * la_w - cpu_v * cpu_w
+            return (
+                n.priority,
+                n.region == group.region,
+                la_v * la_w - cpu_v * cpu_w,
+            )
 
         node_candidates = sorted(node_candidates, key=node_weight, reverse=True)
         try:
