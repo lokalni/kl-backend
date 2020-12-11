@@ -72,8 +72,16 @@ class Resource {
         return this._handler(api.get(`/${this.path}/`, {params}));
     }
 
+    search(query) {
+        return this._handler(api.get(`/${this.path}/`, {params: {search: query}}));
+    }
+
     update(objId, params = {}) {
-        return this._handler(api.post(`/${this.path}/${objId}`, {params}));
+        return this._handler(api.post(`/${this.path}/${objId}/`, {params}));
+    }
+
+    partialUpdate(objId, params = {}) {
+        return this._handler(api.patch(`/${this.path}/${objId}/`, params));
     }
 
     delete(objId) {
@@ -122,5 +130,6 @@ class ModeratorResource extends Resource {
 
 export const Groups = new GroupResource('groups');
 export const Students = new StudentResource('students');
+export const Servers = new Resource('servers');
 export const Accounts = new AccountsResource('accounts');
 export const Moderators = new ModeratorResource('moderators');

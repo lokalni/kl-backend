@@ -27,7 +27,8 @@ class TestGroupsViewSet(TestCase):
         server_1 = self._make_server(
             hostname='srv1', display_name='dsrv1', last_heartbeat=now() - timedelta(seconds=100), load_5m=1)
         server_2 = self._make_server(
-            hostname='srv2', display_name='dsrv2', last_heartbeat=now() - timedelta(seconds=100), region='other', load_5m=1)
+            hostname='srv2', display_name='dsrv2', last_heartbeat=now() - timedelta(seconds=100), region='other',
+            load_5m=1)
 
         g = mommy.make('kl_participants.Group', region=self.region, display_name='grupa')
         m = mommy.make('kl_participants.Moderator')
@@ -37,6 +38,28 @@ class TestGroupsViewSet(TestCase):
         user.save()
 
         return server_1, server_2, g, user
+
+    def test_partial_update_group_with_preferred_servers(self):
+        server_1, server_2, group, user = self._two_servers_region_priority_setup()
+        self.client.login(username=user.username, password='pass')
+
+        resp = self.client.patch(f'{self._groups_url(group)}', content_type='application/json', data={
+            'region': 'malopolskie',
+            'preferred_servers': [
+                {"id": server_2.id},
+                {"id": server_1.id},
+            ]
+        })
+        resp_data = resp.json()
+        group.refresh_from_db()
+
+        # Check resp
+        self.assertEquals(resp.status_code, 200)
+        self.assertEquals([_['id'] for _ in resp_data['preferred_servers']], [server_2.id, server_1.id])
+        self.assertEquals(group.region, 'malopolskie')
+        self.assertEquals(group.preferred_servers.count(), 2)
+        self.assertTrue(group.preferred_servers.through.objects.filter(server_id=server_2.id, priority=2).exists())
+        self.assertTrue(group.preferred_servers.through.objects.filter(server_id=server_1.id, priority=1).exists())
 
     @freeze_time('2020-01-15 00:00:00')
     @mock.patch('kl_conferences.lesson_bridging_service.BigBlueButtonAPI')
@@ -93,7 +116,7 @@ class TestGroupsViewSet(TestCase):
 
         def mock_create_room(meeting_id, *args, **kwargs):
             for_server = Room.objects.get(id=meeting_id).server_node
-            if for_server== server_1:
+            if for_server == server_1:
                 raise BBBServerUnreachable(hostname=for_server.hostname)
             else:
                 return MagicMock(attendeePW='attendeePW', moderatorPW='moderatorPW')

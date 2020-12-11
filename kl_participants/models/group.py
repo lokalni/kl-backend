@@ -8,6 +8,7 @@ class Group(models.Model):
     """Studying groups"""
     display_name = models.CharField(max_length=255)
     region = models.CharField(choices=Region.choices(), max_length=32)  # TODO - move to table or convert to int id
+    preferred_servers = models.ManyToManyField('kl_conferences.ServerNode', through='kl_conferences.PreferredServer')
     # TODO - add school info?
 
     class Meta:
