@@ -29,6 +29,12 @@
 
     export default {
         name: "AddServerForm",
+        props: {
+            preloadFilter: {
+                type: Object,
+                default: () => {},
+            }
+        },
         data() {
             return {
                 matchingServers: [],
@@ -37,7 +43,16 @@
         components: {
             Multiselect,
         },
+        async beforeMount() {
+            await this.preloadServers();
+        },
         methods: {
+            async preloadServers(){
+                this.matchingServers = await Servers.list(this.preloadFilter);
+                if (this.matchingServers.length === 0) {
+                    this.matchingServers = await Servers.list();
+                }
+            },
             serverSelected(server) {
                 this.$emit('submittedServer', server);
             },
