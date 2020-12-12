@@ -15,7 +15,7 @@ class ServerNodeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = ServerNode.objects.all()
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     filterset_fields = ['region']
-    search_fields = ['hostname', 'display_name']
+    search_fields = ['hostname', 'display_name', 'region']
 
 
 class ServerNodeSelfServiceViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
