@@ -1,16 +1,6 @@
 <template>
     <div class="container">
         <Navbar/>
-        <div class="row">
-            <div class="col">
-                <div class="btn-group float-left" role="group">
-                    <button type="button" class="btn btn-primary"
-                            @click="startAndJoin">
-                        Rozpocznij lekcję
-                    </button>
-                </div>
-            </div>
-        </div>
         <!-- Students list -->
         <div class="card my-3">
             <div class="card-body">
@@ -27,10 +17,20 @@
                 generuje link od nowa w przypadku gdy uczeń go zgubi, bądź podzieli się nim z niepożądanymi osobami.
                 Aby rozpocząć lekcje uczniowie muszą najpierw otrzymać poniższe linki
             </p>
-            <div class="col-md-6">
-                <AddStudentForm @submittedStudent="onSubmittedStudent"/>
+            <div class="row mx-3">
+                <div class="col">
+                    <AddStudentForm @submittedStudent="onSubmittedStudent"/>
+                </div>
+                <div class="col">
+                    <div class="btn-group float-left" role="group">
+                        <button type="button" class="btn btn-primary"
+                                @click="startAndJoin">
+                            Rozpocznij lekcję
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="mx-3">
+            <div class="row mx-3">
                 <StudentList
                         :students="students"
                         @updatedStudent="onUpdatedStudent"
@@ -39,51 +39,61 @@
             </div>
         </div>
 
-        <!-- Settings -->
+        <!-- Advanced Settings -->
         <div class="card my-3">
-            <div class="card-body">
+            <div class="card-body mx-3">
                 <h3 class="card-title">
-                    Ustawienia
+                    Ustawienia Zaawansowane
+                    <a class="badge badge-light"
+                        @click="settingsCollapsed = !settingsCollapsed">
+                    {{settingsCollapsed ? 'Pokaż' : 'Ukryj'}}
+                    </a>
                 </h3>
-            </div>
 
-            <div class="col-md-6 mb-3">
-                <button
-                        type="button"
-                        class="btn btn-primary float-left"
-                        :disabled="!hasChanges"
-                        @click="onGroupChangesSave"
-                >
-                    Zapisz zmiany
-                </button>
-            </div>
-
-            <div class="col-md-6 mt-3">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Region</span>
+                <div v-if="!settingsCollapsed">
+                    <div class="row mb-3">
+                        <button
+                                type="button"
+                                class="btn btn-primary float-left"
+                                :disabled="!hasChanges"
+                                @click="onGroupChangesSave"
+                        >
+                            Zapisz zmiany
+                        </button>
                     </div>
-                    <div>
-                        <SelectRegionDropdown v-model="region" @input="hasChanges = true"/>
+
+                    <div class="row mt-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Region</span>
+                            </div>
+                            <div class="flex-grow-1">
+                                <SelectRegionDropdown v-model="region" @input="hasChanges = true"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Dodaj Serwer</span>
+                            </div>
+                            <div v-if="group.id" class="flex-grow-1">
+                                <AddServerForm
+                                        :preloadFilter="{region: group.region}"
+                                        @submittedServer="addPreferredServer"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <ServerList
+                                :servers="preferredServers"
+                                @serversChanged="onServersChanged"
+                        />
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-6 mt-3">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Dodaj Serwer</span>
-                    </div>
-                    <div>
-                        <AddServerForm @submittedServer="addPreferredServer"/>
-                    </div>
-                </div>
-            </div>
-            <div class="m-3">
-                <ServerList
-                        :servers="preferredServers"
-                        @serversChanged="onServersChanged"
-                />
             </div>
         </div>
 
@@ -112,6 +122,7 @@
         data() {
             // TODO - move to vuex, maybe at API call level
             return {
+                settingsCollapsed: true,
                 group: {},
                 students: [],
                 // Editable
@@ -180,3 +191,9 @@
         }
     };
 </script>
+
+<style scoped>
+    .flex-grow-1 {
+        flex-grow: 1;
+    }
+</style>
