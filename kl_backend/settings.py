@@ -194,6 +194,6 @@ MAX_STUDENT_TOKEN_SESSIONS = env.int('DJ_MAX_STUDENT_TOKEN_SESSIONS', default=2)
 
 # --- SERVER NODE SETTINGS ---
 # Servers with last heartbeat older than X seconds are excluded from pool
-MAX_HEARTBEAT_DELAY = env.int('DJ_MAX_STUDENT_TOKEN_SESSIONS', default=5 * 60)
+MAX_HEARTBEAT_DELAY = env.int('DJ_MAX_HEARTBEAT_DELAY', default=5 * 60)
 # How much load is too high to consider same region preferred
-MAX_SAME_REGION_LOAD_PER_CPU = D(env.str('DJ_MAX_STUDENT_TOKEN_SESSIONS', default='0.82137'))
+MAX_SAME_REGION_LOAD_PER_CPU = D(env.str('DJ_MAX_SAME_REGION_LOAD_PER_CPU', default='0.80'))

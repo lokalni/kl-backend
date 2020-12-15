@@ -1,5 +1,4 @@
 from datetime import timedelta
-from decimal import Decimal as D
 
 from django.test import TestCase
 from django.utils.timezone import now
@@ -72,3 +71,22 @@ class TestServerNodeTest(TestCase):
         g = mommy.make('kl_participants.Group', region=self.region)
         PreferredServer.objects.create(group=g, server=serv_pref_high_load, priority=1)
         self.assertEquals(ServerNode.assign_server(g), serv_other)
+
+    @freeze_time('2020-01-15 00:00:00')
+    def test_server_assignemnt_pref_server_different_group_not_used(self):
+        serv_local = self._make_server(last_heartbeat=now() - timedelta(seconds=100))
+        serv_other_region_pref = self._make_server(last_heartbeat=now() - timedelta(seconds=100), region='other')
+        g_with_pref = mommy.make('kl_participants.Group', region=self.region)
+        g_without_pref = mommy.make('kl_participants.Group', region=self.region)
+        PreferredServer.objects.create(group=g_with_pref, server=serv_other_region_pref, priority=1)
+        self.assertEquals(ServerNode.assign_server(g_without_pref), serv_local)
+
+    @freeze_time('2020-01-15 00:00:00')
+    def test_server_assignemnt_pref_server_dont_exclude_for_other_groups_if_preferred(self):
+        serv_local = self._make_server(last_heartbeat=now() - timedelta(seconds=100))
+        serv_other_region_pref = self._make_server(last_heartbeat=now() - timedelta(seconds=100), region='other')
+        g1 = mommy.make('kl_participants.Group', region=self.region)
+        g2 = mommy.make('kl_participants.Group', region='other')
+        PreferredServer.objects.create(group=g1, server=serv_other_region_pref, priority=1)
+        self.assertEquals(ServerNode.assign_server(g1), serv_other_region_pref)
+        self.assertEquals(ServerNode.assign_server(g2), serv_other_region_pref)

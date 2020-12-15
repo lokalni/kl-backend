@@ -4,7 +4,7 @@ from decimal import Decimal as D
 
 from django.contrib import admin
 from django.db import models
-from django.db.models import F, ExpressionWrapper, DecimalField
+from django.db.models import F, ExpressionWrapper, DecimalField, Value, IntegerField
 from django.db.models.functions import Coalesce
 from django.utils.timezone import now
 from django.conf import settings
@@ -57,10 +57,15 @@ class ServerNode(models.Model):
                 F('load_5m') / F('cpu_count'),
                 output_field=DecimalField()
             ),
-            priority=Coalesce('preferredserver__priority', 0),
-        ).filter(
-            load_per_cpu__lt=max_load,
-        )
+            priority=Value(0, IntegerField()),
+        ).filter(load_per_cpu__lt=max_load)
+
+        # Check valid preferred servers exist
+        preferred_servers_candidates = node_candidates.filter(preferredserver__group=group)
+        if preferred_servers_candidates.exists():
+            node_candidates = preferred_servers_candidates.annotate(
+                priority=Coalesce('preferredserver__priority', 0),
+            )
 
         def node_weight(n):
             """Evaluates preferred server, region and load"""
